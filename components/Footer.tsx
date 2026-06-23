@@ -9,6 +9,7 @@ const footerLinks = {
     { label: 'Long-Distance', href: '/#services' },
     { label: 'Packing Services', href: '/#services' },
     { label: 'Storage Solutions', href: '/#services' },
+    { label: 'Outdoor Storage', href: '/#outdoor-storage' },
     { label: 'Office Moving', href: '/#services' },
   ],
   Shop: [
