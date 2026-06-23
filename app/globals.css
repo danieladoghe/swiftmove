@@ -266,3 +266,42 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* ─── Lenis smooth scroll ─────────────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ─── Story: force light headings over the cosmic background ───────────── */
+/* The global `h1,h2 { color: var(--text) }` rule is unlayered, so it outranks
+   Tailwind's layered `.text-white` utility. This scoped rule (higher
+   specificity, also unlayered) restores white headings on the story route. */
+.story-root :is(h1, h2, h3, h4) {
+  color: #fff;
+}
+
+/* ─── Story scroll hint ───────────────────────────────────────────────── */
+@keyframes story-scroll-pulse {
+  0%   { transform: translateY(-6px) scaleY(0.7); opacity: 0.3; }
+  50%  { transform: translateY(4px) scaleY(1);    opacity: 1; }
+  100% { transform: translateY(14px) scaleY(0.7); opacity: 0; }
+}
+.story-scroll-dot {
+  animation: story-scroll-pulse 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-scroll-dot { animation: none; }
+}
