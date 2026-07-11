@@ -12,13 +12,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'SwiftMove Co. | Premium Moving Services & Supplies',
+  title: "Mo's Yard | Storage, Rentals & Logistics",
   description:
-    'SwiftMove Co. offers professional local and long-distance moving services, packing, storage solutions, and quality moving supplies. Get a free quote today.',
-  keywords: ['moving company', 'moving services', 'local movers', 'long distance moving', 'moving boxes', 'packing supplies', 'storage'],
+    "Mo's Yard offers secure outdoor storage, equipment rentals, and reliable logistics and moving services. Flexible month-to-month terms. Get a free quote today.",
+  keywords: ['outdoor storage', 'storage rental', 'equipment rentals', 'logistics', 'moving services', 'moving boxes', 'packing supplies', 'container storage'],
   openGraph: {
-    title: 'SwiftMove Co. | Premium Moving Services & Supplies',
-    description: 'Professional moving services and supplies. Fully insured, 12+ years experience, 6,000+ moves completed.',
+    title: "Mo's Yard | Storage, Rentals & Logistics",
+    description: 'Secure outdoor storage, rentals, and logistics. Fully insured, 12+ years experience, 6,000+ customers served.',
     type: 'website',
   },
 };

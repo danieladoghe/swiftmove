@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Truck, Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { Logo } from './Logo';
 
 const footerLinks = {
   Services: [
@@ -46,17 +47,12 @@ export function Footer() {
         <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2.5 mb-5">
-              <div className="w-9 h-9 rounded-xl bg-[var(--accent)] flex items-center justify-center">
-                <Truck size={18} className="text-white" />
-              </div>
-              <span className="font-bold text-[1.15rem] text-[var(--text)]">
-                Swift<span className="text-[var(--accent)]">Move</span> Co.
-              </span>
-            </Link>
+            <div className="mb-5">
+              <Logo showTagline />
+            </div>
             <p className="text-[var(--muted)] text-sm leading-relaxed mb-6 max-w-xs">
-              Premium moving services for homes, offices, and everything in between.
-              Trusted by 6,000+ families across 50+ cities.
+              Secure outdoor storage, equipment rentals, and reliable logistics for
+              homes and businesses. Trusted by 6,000+ customers across 50+ cities.
             </p>
             {/* Contact info */}
             <div className="space-y-2.5">
@@ -107,7 +103,7 @@ export function Footer() {
           flex flex-col sm:flex-row items-center justify-between gap-4
         ">
           <p className="text-xs text-[var(--muted)]">
-            © {new Date().getFullYear()} SwiftMove Co. All rights reserved.
+            © {new Date().getFullYear()} Mo&apos;s Yard. All rights reserved.
           </p>
 
           {/* Social icons */}

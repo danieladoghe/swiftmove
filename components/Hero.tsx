@@ -46,7 +46,7 @@ export function Hero() {
         <div
           className="orb-2 absolute bottom-[20%] left-[5%] w-[280px] h-[280px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.08]"
           style={{
-            background: 'radial-gradient(circle, #34d399 0%, transparent 70%)',
+            background: 'radial-gradient(circle, #ffb45a 0%, transparent 70%)',
             filter: 'blur(80px)',
           }}
         />
@@ -119,8 +119,8 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.35 }}
           className="text-lg md:text-xl text-[var(--muted)] max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          SwiftMove Co. delivers premium local and long-distance moving services across the country.
-          From packing to unpacking — we handle everything so you don't have to.
+          Mo&apos;s Yard delivers secure outdoor storage, equipment rentals, and reliable
+          logistics. From your first box to your final mile — we handle it so you don&apos;t have to.
         </motion.p>
 
         {/* CTA buttons */}

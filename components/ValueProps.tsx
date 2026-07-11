@@ -49,7 +49,7 @@ export function ValueProps() {
             inline-block px-3.5 py-1 rounded-full text-xs font-semibold tracking-widest uppercase
             bg-[var(--glow-soft)] text-[var(--accent)] border border-[var(--accent)]/20 mb-4
           ">
-            Why SwiftMove
+            Why Mo&apos;s Yard
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             Move with Confidence

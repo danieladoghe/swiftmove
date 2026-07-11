@@ -28,7 +28,7 @@ export default function OrderSuccessPage() {
 
         <h1 className="text-3xl font-bold mb-3">Order Confirmed!</h1>
         <p className="text-[var(--muted)] mb-2">
-          Thank you for your purchase from SwiftMove Co.
+          Thank you for your purchase from Mo&apos;s Yard.
         </p>
         <p className="text-[var(--muted)] text-sm mb-8">
           You'll receive a confirmation email shortly with your order details and tracking information.

@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     // });
 
     // For now, log the quote request
-    console.log('[SwiftMove] New quote request:', {
+    console.log("[Mo's Yard] New quote request:", {
       name: `${firstName} ${lastName}`,
       email,
       phone: body.phone,
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('[SwiftMove] Contact form error:', error);
+    console.error("[Mo's Yard] Contact form error:", error);
     return NextResponse.json(
       { success: false, error: 'Failed to submit. Please try again.' },
       { status: 500 }
