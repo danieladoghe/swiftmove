@@ -285,6 +285,14 @@ html.lenis body {
   pointer-events: none;
 }
 
+/* ─── Landing (cinematic homepage): headings inherit section colors ────── */
+/* The global `h1..h6 { color: var(--text) }` rule is unlayered and would
+   force theme colors onto the fixed-palette landing. Headings inherit from
+   their section wrappers instead (each landing section sets its own color). */
+.landing-root :is(h1, h2, h3, h4, h5, h6) {
+  color: inherit;
+}
+
 /* ─── Story: force light headings over the cosmic background ───────────── */
 /* The global `h1,h2 { color: var(--text) }` rule is unlayered, so it outranks
    Tailwind's layered `.text-white` utility. This scoped rule (higher

@@ -1,23 +1,29 @@
-import { Hero } from '@/components/Hero';
-import { ValueProps } from '@/components/ValueProps';
-import { ServicesGrid } from '@/components/ServicesGrid';
-import { SplitSections } from '@/components/SplitSections';
-import { OutdoorStorage } from '@/components/OutdoorStorage';
-import { Stats } from '@/components/Stats';
-import { Testimonials } from '@/components/Testimonials';
-import { CTABanner } from '@/components/CTABanner';
+import { LandingNav } from '@/components/landing/LandingNav';
+import { LandingHero } from '@/components/landing/LandingHero';
+import { FeatureBar } from '@/components/landing/FeatureBar';
+import { YardGrid } from '@/components/landing/YardGrid';
+import { RentalsSpotlight } from '@/components/landing/RentalsSpotlight';
+import { BrandStory } from '@/components/landing/BrandStory';
+import { QuotePlanner } from '@/components/landing/QuotePlanner';
+import { YardNotes } from '@/components/landing/YardNotes';
+import { ContactSection } from '@/components/landing/ContactSection';
+import { LandingFooter } from '@/components/landing/LandingFooter';
 
 export default function HomePage() {
   return (
-    <>
-      <Hero />
-      <ValueProps />
-      <ServicesGrid />
-      <SplitSections />
-      <OutdoorStorage />
-      <Stats />
-      <Testimonials />
-      <CTABanner />
-    </>
+    <div className="landing-root bg-[#0E1013]">
+      <LandingNav />
+      <main>
+        <LandingHero />
+        <FeatureBar />
+        <YardGrid />
+        <RentalsSpotlight />
+        <BrandStory />
+        <QuotePlanner />
+        <YardNotes />
+        <ContactSection />
+      </main>
+      <LandingFooter />
+    </div>
   );
 }
