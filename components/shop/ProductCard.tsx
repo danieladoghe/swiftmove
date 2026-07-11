@@ -99,7 +99,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
               flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold
               transition-all duration-200
               ${added
-                ? 'bg-emerald-500 text-white shadow-[0_0_14px_rgba(16,185,129,0.4)]'
+                ? 'bg-[var(--accent-dark)] text-white shadow-[0_0_14px_var(--glow)]'
                 : 'bg-[var(--accent)] text-white hover:bg-[var(--accent-dark)] hover:shadow-[0_0_14px_var(--glow)]'
               }
             `}

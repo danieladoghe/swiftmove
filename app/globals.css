@@ -2,38 +2,38 @@
 
 /* ─── Design Tokens: Light Theme ─────────────────────────────────────── */
 :root {
-  --bg: #f0f9f4;
+  --bg: #faf8f5;
   --surface: #ffffff;
-  --surface-2: #e8f5ee;
-  --text: #0f1f17;
-  --muted: #4b6e5c;
-  --border: #c9e8d8;
-  --accent: #10b981;
-  --accent-dark: #059669;
-  --glow: rgba(16, 185, 129, 0.35);
-  --glow-soft: rgba(16, 185, 129, 0.15);
-  --shadow: 0 4px 24px rgba(16, 185, 129, 0.08);
-  --shadow-lg: 0 8px 40px rgba(16, 185, 129, 0.14);
-  --navbar-bg: rgba(240, 249, 244, 0.85);
-  --gradient-hero: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(16, 185, 129, 0.18) 0%, transparent 70%);
+  --surface-2: #f1ede7;
+  --text: #17191d;
+  --muted: #5f636b;
+  --border: #e5e0d8;
+  --accent: #f5921e;
+  --accent-dark: #d97b0c;
+  --glow: rgba(245, 146, 30, 0.35);
+  --glow-soft: rgba(245, 146, 30, 0.14);
+  --shadow: 0 4px 24px rgba(23, 25, 29, 0.06);
+  --shadow-lg: 0 8px 40px rgba(23, 25, 29, 0.12);
+  --navbar-bg: rgba(250, 248, 245, 0.85);
+  --gradient-hero: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(245, 146, 30, 0.18) 0%, transparent 70%);
 }
 
-/* ─── Design Tokens: Dark Theme ──────────────────────────────────────── */
+/* ─── Design Tokens: Dark Theme (matches the Mo's Yard logo) ──────────── */
 .dark {
-  --bg: #060d0a;
-  --surface: #0d1f17;
-  --surface-2: #0a1a12;
-  --text: #e8f5ee;
-  --muted: #7db89a;
-  --border: #1a3528;
-  --accent: #10b981;
-  --accent-dark: #34d399;
-  --glow: rgba(16, 185, 129, 0.4);
-  --glow-soft: rgba(16, 185, 129, 0.12);
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
-  --navbar-bg: rgba(6, 13, 10, 0.85);
-  --gradient-hero: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(16, 185, 129, 0.22) 0%, rgba(52, 211, 153, 0.06) 50%, transparent 70%);
+  --bg: #0e1013;
+  --surface: #181b20;
+  --surface-2: #131519;
+  --text: #f2f0ec;
+  --muted: #9aa0a8;
+  --border: #2a2e35;
+  --accent: #f5921e;
+  --accent-dark: #ffa733;
+  --glow: rgba(245, 146, 30, 0.4);
+  --glow-soft: rgba(245, 146, 30, 0.14);
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.55);
+  --navbar-bg: rgba(14, 16, 19, 0.85);
+  --gradient-hero: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(245, 146, 30, 0.20) 0%, rgba(255, 167, 51, 0.05) 50%, transparent 70%);
 }
 
 /* ─── Tailwind v4 Theme Integration ──────────────────────────────────── */
@@ -254,15 +254,62 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Gradient text ───────────────────────────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, #ffb45a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .dark .gradient-text {
-  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  background: linear-gradient(135deg, #f5921e 0%, #ffc074 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* ─── Lenis smooth scroll ─────────────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ─── Landing (cinematic homepage): headings inherit section colors ────── */
+/* The global `h1..h6 { color: var(--text) }` rule is unlayered and would
+   force theme colors onto the fixed-palette landing. Headings inherit from
+   their section wrappers instead (each landing section sets its own color). */
+.landing-root :is(h1, h2, h3, h4, h5, h6) {
+  color: inherit;
+}
+
+/* ─── Story: force light headings over the cosmic background ───────────── */
+/* The global `h1,h2 { color: var(--text) }` rule is unlayered, so it outranks
+   Tailwind's layered `.text-white` utility. This scoped rule (higher
+   specificity, also unlayered) restores white headings on the story route. */
+.story-root :is(h1, h2, h3, h4) {
+  color: #fff;
+}
+
+/* ─── Story scroll hint ───────────────────────────────────────────────── */
+@keyframes story-scroll-pulse {
+  0%   { transform: translateY(-6px) scaleY(0.7); opacity: 0.3; }
+  50%  { transform: translateY(4px) scaleY(1);    opacity: 1; }
+  100% { transform: translateY(14px) scaleY(0.7); opacity: 0; }
+}
+.story-scroll-dot {
+  animation: story-scroll-pulse 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-scroll-dot { animation: none; }
 }

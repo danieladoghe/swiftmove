@@ -44,14 +44,14 @@ export async function POST(request: NextRequest) {
     // Example with Resend:
     // const resend = new Resend(process.env.RESEND_API_KEY);
     // await resend.emails.send({
-    //   from: 'quotes@swiftmove.com',
-    //   to: 'hello@swiftmove.com',
+    //   from: 'quotes@mosyard.com',
+    //   to: 'hello@mosyard.com',
     //   subject: `New Quote Request from ${firstName} ${lastName}`,
     //   html: `...`,
     // });
 
     // For now, log the quote request
-    console.log('[SwiftMove] New quote request:', {
+    console.log("[Mo's Yard] New quote request:", {
       name: `${firstName} ${lastName}`,
       email,
       phone: body.phone,
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('[SwiftMove] Contact form error:', error);
+    console.error("[Mo's Yard] Contact form error:", error);
     return NextResponse.json(
       { success: false, error: 'Failed to submit. Please try again.' },
       { status: 500 }

@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     if (!squareAccessToken || !squareLocationId) {
       // In demo mode, simulate a successful payment
-      console.warn('[SwiftMove] Square credentials not set — running in demo mode.');
+      console.warn("[Mo's Yard] Square credentials not set — running in demo mode.");
       const demoOrderId = `DEMO-${randomUUID().slice(0, 8).toUpperCase()}`;
       return NextResponse.json({
         success: true,
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
             postal_code: buyerInfo.zip,
             country: 'US',
           },
-          note: `SwiftMove order for ${buyerInfo.firstName} ${buyerInfo.lastName}`,
+          note: `Mo's Yard order for ${buyerInfo.firstName} ${buyerInfo.lastName}`,
           order_id: randomUUID(),
         }),
       }
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('[SwiftMove] Payment error:', error);
+    console.error("[Mo's Yard] Payment error:", error);
     return NextResponse.json(
       { success: false, error: 'Internal server error. Please try again.' },
       { status: 500 }

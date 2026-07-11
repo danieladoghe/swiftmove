@@ -4,12 +4,14 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Truck } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+import { Logo } from './Logo';
 
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/#services', label: 'Services' },
+  { href: '/#outdoor-storage', label: 'Storage' },
   { href: '/#about', label: 'About' },
   { href: '/shop', label: 'Shop' },
   { href: '/contact', label: 'Contact' },
@@ -46,17 +48,7 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="
-                w-9 h-9 rounded-xl bg-[var(--accent)] flex items-center justify-center
-                group-hover:shadow-[0_0_16px_var(--glow)] transition-shadow duration-300
-              ">
-                <Truck size={18} className="text-white" />
-              </div>
-              <span className="font-bold text-[1.15rem] text-[var(--text)] tracking-tight">
-                Swift<span className="text-[var(--accent)]">Move</span>
-              </span>
-            </Link>
+            <Logo variant="wordmark" priority heightClass="h-8 sm:h-9" />
 
             {/* Desktop Nav Links */}
             <div className="hidden md:flex items-center gap-1">

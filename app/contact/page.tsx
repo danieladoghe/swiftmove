@@ -6,7 +6,7 @@ import { Phone, Mail, MapPin, Clock, Send, Loader2, CheckCircle2 } from 'lucide-
 
 const contactDetails = [
   { icon: Phone, label: 'Phone', value: '(555) 123-4567', href: 'tel:+15551234567' },
-  { icon: Mail, label: 'Email', value: 'hello@swiftmove.com', href: 'mailto:hello@swiftmove.com' },
+  { icon: Mail, label: 'Email', value: 'hello@mosyard.com', href: 'mailto:hello@mosyard.com' },
   { icon: MapPin, label: 'Headquarters', value: '123 Mover Lane, Suite 400\nAustin, TX 78701', href: '#' },
   { icon: Clock, label: 'Hours', value: 'Mon–Fri: 7am–8pm\nSat–Sun: 8am–5pm', href: '#' },
 ];
