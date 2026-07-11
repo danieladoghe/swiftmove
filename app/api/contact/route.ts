@@ -44,8 +44,8 @@ export async function POST(request: NextRequest) {
     // Example with Resend:
     // const resend = new Resend(process.env.RESEND_API_KEY);
     // await resend.emails.send({
-    //   from: 'quotes@swiftmove.com',
-    //   to: 'hello@swiftmove.com',
+    //   from: 'quotes@mosyard.com',
+    //   to: 'hello@mosyard.com',
     //   subject: `New Quote Request from ${firstName} ${lastName}`,
     //   html: `...`,
     // });

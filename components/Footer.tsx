@@ -48,7 +48,7 @@ export function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <div className="mb-5">
-              <Logo showTagline />
+              <Logo heightClass="h-16" />
             </div>
             <p className="text-[var(--muted)] text-sm leading-relaxed mb-6 max-w-xs">
               Secure outdoor storage, equipment rentals, and reliable logistics for
@@ -64,11 +64,11 @@ export function Footer() {
                 (555) 123-4567
               </a>
               <a
-                href="mailto:hello@swiftmove.com"
+                href="mailto:hello@mosyard.com"
                 className="flex items-center gap-2.5 text-sm text-[var(--muted)] hover:text-[var(--accent)] transition-colors"
               >
                 <Mail size={14} />
-                hello@swiftmove.com
+                hello@mosyard.com
               </a>
               <div className="flex items-start gap-2.5 text-sm text-[var(--muted)]">
                 <MapPin size={14} className="mt-0.5 flex-shrink-0" />

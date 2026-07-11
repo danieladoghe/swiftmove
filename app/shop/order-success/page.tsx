@@ -43,7 +43,7 @@ export default function OrderSuccessPage() {
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-[var(--muted)]">Support</span>
-            <span className="font-medium text-[var(--accent)]">hello@swiftmove.com</span>
+            <span className="font-medium text-[var(--accent)]">hello@mosyard.com</span>
           </div>
         </div>
 
