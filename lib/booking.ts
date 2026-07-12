@@ -1,7 +1,8 @@
-// Shared booking catalog + pricing for Mo's Yard storage, movers, and rentals.
-// Rates grounded in 2026 national averages (2-person crew + truck: ~$105–165/hr).
+// Shared booking catalog + pricing for Mo's Yard storage spaces and movers.
+// All prices in CAD. Mover rates grounded in 2026 market averages
+// (2-person crew + truck: ~$105–165/hr).
 
-export type ServiceType = 'storage' | 'movers' | 'rental';
+export type ServiceType = 'storage' | 'movers';
 
 export interface StorageSize {
   id: '20' | '30' | '40';
@@ -47,23 +48,6 @@ export const MOVER_CREWS: MoverCrew[] = [
   { id: 'crew-4', label: '4 Movers + Truck', hourly: 209, minHours: 4, truck: true, blurb: 'Big homes, offices, and tight timelines.' },
 ];
 
-export interface RentalItem {
-  id: string;
-  label: string;
-  daily: number; // dollars per day
-  blurb: string;
-}
-
-export const RENTAL_ITEMS: RentalItem[] = [
-  { id: 'forklift', label: 'Forklift (5,000 lb)', daily: 249, blurb: 'Certified operator available on request' },
-  { id: 'pallet-jack', label: 'Pallet Jack', daily: 39, blurb: 'Manual, 5,500 lb capacity' },
-  { id: 'appliance-dolly', label: 'Appliance Dolly', daily: 29, blurb: 'Strap-equipped, stair-climbing skids' },
-  { id: 'furniture-dollies', label: 'Furniture Dollies (set of 4)', daily: 19, blurb: '1,000 lb capacity each' },
-  { id: 'blanket-bundle', label: 'Moving Blanket Bundle (12)', daily: 15, blurb: 'Quilted pads, returned washed by us' },
-];
-
-export const RENTAL_DELIVERY_FEE = 49; // flat, optional site delivery
-
 export const PAYMENT_OPTIONS = [
   {
     id: 'card-link',
@@ -82,8 +66,8 @@ export const PAYMENT_OPTIONS = [
   },
 ] as const;
 
-export const fmtUSD = (n: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: n % 1 === 0 ? 0 : 2 }).format(n);
+export const fmtCAD = (n: number) =>
+  new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: n % 1 === 0 ? 0 : 2 }).format(n);
 
 export function storageQuote(sizeId: string, months: number) {
   const size = STORAGE_SIZES.find((s) => s.id === sizeId) ?? STORAGE_SIZES[1];
@@ -97,11 +81,4 @@ export function moversQuote(crewId: string, hours: number) {
   const crew = MOVER_CREWS.find((c) => c.id === crewId) ?? MOVER_CREWS[1];
   const billedHours = Math.max(hours, crew.minHours);
   return { crew, billedHours, total: crew.hourly * billedHours };
-}
-
-export function rentalQuote(itemIds: string[], days: number, delivery: boolean) {
-  const items = RENTAL_ITEMS.filter((i) => itemIds.includes(i.id));
-  const perDay = items.reduce((sum, i) => sum + i.daily, 0);
-  const total = perDay * Math.max(days, 1) + (delivery ? RENTAL_DELIVERY_FEE : 0);
-  return { items, perDay, days: Math.max(days, 1), delivery, total };
 }

@@ -3,9 +3,9 @@ import { Suspense } from 'react';
 import { BookingWizard } from '@/components/booking/BookingWizard';
 
 export const metadata: Metadata = {
-  title: "Book Mo's Yard | Storage, Movers & Equipment Rentals",
+  title: "Book Mo's Yard | Storage Spaces & Moving Crews",
   description:
-    'Reserve an outdoor storage space, book a moving crew by the hour, or rent equipment by the day. Instant quotes, flexible payment options.',
+    'Reserve an outdoor storage space or book a moving crew by the hour. Instant quotes in CAD, flexible payment options.',
 };
 
 export default function BookPage() {

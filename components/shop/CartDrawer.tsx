@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/components/CartContext';
+import { formatPrice } from '@/lib/cart';
 
 interface CartDrawerProps {
   open: boolean;
@@ -12,9 +13,6 @@ interface CartDrawerProps {
 
 export function CartDrawer({ open, onClose }: CartDrawerProps) {
   const { items, removeItem, updateQuantity, totalItems, subtotal } = useCart();
-
-  const formatPrice = (cents: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
 
   return (
     <AnimatePresence>
@@ -105,7 +103,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                         <p className="text-xs text-[var(--muted)] mt-0.5">{selectedOption}</p>
                       )}
                       <p className="font-bold text-[var(--accent)] text-sm mt-1">
-                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.price / 100)}
+                        {formatPrice(product.price)}
                       </p>
 
                       <div className="flex items-center gap-2 mt-2">
@@ -152,7 +150,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                 <div className="flex justify-between items-center">
                   <span className="text-[var(--muted)] text-sm">Subtotal</span>
                   <span className="font-bold text-xl text-[var(--text)]">
-                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(subtotal / 100)}
+                    {formatPrice(subtotal)}
                   </span>
                 </div>
                 <p className="text-xs text-[var(--muted)]">

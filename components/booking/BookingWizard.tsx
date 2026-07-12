@@ -5,18 +5,17 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Warehouse, Truck, Forklift, ArrowRight, ArrowLeft, Check,
+  Warehouse, Truck, ArrowRight, ArrowLeft, Check,
   CalendarDays, Clock, MapPin, CreditCard, CheckCircle2,
 } from 'lucide-react';
 import {
-  STORAGE_SIZES, STORAGE_TERMS, MOVER_CREWS, RENTAL_ITEMS, RENTAL_DELIVERY_FEE,
-  PAYMENT_OPTIONS, fmtUSD, storageQuote, moversQuote, rentalQuote, type ServiceType,
+  STORAGE_SIZES, STORAGE_TERMS, MOVER_CREWS,
+  PAYMENT_OPTIONS, fmtCAD, storageQuote, moversQuote, type ServiceType,
 } from '@/lib/booking';
 
 const SERVICES = [
   { id: 'storage' as const, icon: Warehouse, title: 'Storage Space', blurb: 'Reserve a 20, 30, or 40 ft outdoor space — month-to-month or prepaid.' },
   { id: 'movers' as const, icon: Truck, title: 'Moving Crew', blurb: 'Book movers by the hour, with or without our truck.' },
-  { id: 'rental' as const, icon: Forklift, title: 'Equipment Rental', blurb: 'Forklifts, dollies, pallet jacks, and blankets by the day.' },
 ];
 
 const STEPS = ['Service', 'Details', 'Contact', 'Payment'];
@@ -31,7 +30,7 @@ const stepAnim = {
 export function BookingWizard() {
   const params = useSearchParams();
 
-  const initialService = (['storage', 'movers', 'rental'].includes(params.get('service') ?? '')
+  const initialService = (['storage', 'movers'].includes(params.get('service') ?? '')
     ? params.get('service')
     : null) as ServiceType | null;
   const initialSize = ['20', '30', '40'].includes(params.get('size') ?? '') ? params.get('size')! : '30';
@@ -47,7 +46,6 @@ export function BookingWizard() {
     date: params.get('date') ?? '',
   });
   const [movers, setMovers] = useState({ crew: 'crew-2', hours: 3, date: '', from: '', to: '' });
-  const [rental, setRental] = useState({ items: ['forklift'] as string[], days: 1, date: '', delivery: false });
 
   const [contact, setContact] = useState({ name: '', email: '', phone: '', notes: '' });
   const [payment, setPayment] = useState<string>(PAYMENT_OPTIONS[0].id);
@@ -59,42 +57,27 @@ export function BookingWizard() {
       const q = storageQuote(storage.size, storage.months);
       return {
         lines: [
-          { k: q.size.label, v: `${fmtUSD(q.size.monthly)}/mo` },
+          { k: q.size.label, v: `${fmtCAD(q.size.monthly)}/mo` },
           { k: q.term.label, v: q.term.discount ? `−${q.term.discount * 100}%` : '—' },
-          ...(q.savings > 0 ? [{ k: 'Prepay savings', v: `−${fmtUSD(q.savings)}` }] : []),
+          ...(q.savings > 0 ? [{ k: 'Prepay savings', v: `−${fmtCAD(q.savings)}` }] : []),
         ],
         summary: `${q.size.label} · ${q.term.months} month${q.term.months > 1 ? 's' : ''}${storage.date ? ` · from ${storage.date}` : ''}`,
         total: q.total,
         totalLabel: q.term.months > 1 ? `total for ${q.term.months} months` : 'per month',
       };
     }
-    if (service === 'movers') {
-      const q = moversQuote(movers.crew, movers.hours);
-      return {
-        lines: [
-          { k: q.crew.label, v: `${fmtUSD(q.crew.hourly)}/hr` },
-          { k: `${q.billedHours} hours (est.)`, v: fmtUSD(q.total) },
-        ],
-        summary: `${q.crew.label} · ~${q.billedHours} hrs${movers.date ? ` · ${movers.date}` : ''}`,
-        total: q.total,
-        totalLabel: 'estimated — final billed by the hour',
-      };
-    }
-    const q = rentalQuote(rental.items, rental.days, rental.delivery);
+    const q = moversQuote(movers.crew, movers.hours);
     return {
       lines: [
-        ...q.items.map((i) => ({ k: i.label, v: `${fmtUSD(i.daily)}/day` })),
-        { k: `× ${q.days} day${q.days > 1 ? 's' : ''}`, v: fmtUSD(q.perDay * q.days) },
-        ...(q.delivery ? [{ k: 'Site delivery', v: fmtUSD(RENTAL_DELIVERY_FEE) }] : []),
+        { k: q.crew.label, v: `${fmtCAD(q.crew.hourly)}/hr` },
+        { k: `${q.billedHours} hours (est.)`, v: fmtCAD(q.total) },
       ],
-      summary: `${q.items.map((i) => i.label).join(', ')} · ${q.days} day${q.days > 1 ? 's' : ''}`,
+      summary: `${q.crew.label} · ~${q.billedHours} hrs${movers.date ? ` · ${movers.date}` : ''}`,
       total: q.total,
-      totalLabel: 'rental total',
+      totalLabel: 'estimated — final billed by the hour',
     };
-  }, [service, storage, movers, rental]);
+  }, [service, storage, movers]);
 
-  const detailsValid =
-    service !== 'rental' || rental.items.length > 0;
   const contactValid = contact.name.trim().length > 1 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email);
 
   const confirm = async () => {
@@ -107,7 +90,7 @@ export function BookingWizard() {
           service,
           summary: quote.summary,
           total: quote.total,
-          details: service === 'storage' ? storage : service === 'movers' ? movers : rental,
+          details: service === 'storage' ? storage : movers,
           contact,
           payment,
         }),
@@ -124,8 +107,7 @@ export function BookingWizard() {
     }
   };
 
-  const input =
-    'form-input'; // themed input utility from globals.css
+  const input = 'form-input'; // themed input utility from globals.css
 
   /* ── Success screen ── */
   if (reference) {
@@ -141,7 +123,7 @@ export function BookingWizard() {
           <div className="mb-8 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-left text-sm">
             <p className="mb-1 font-semibold">{quote.summary}</p>
             <p className="text-[var(--muted)]">
-              {fmtUSD(quote.total)} · {PAYMENT_OPTIONS.find((p) => p.id === payment)?.label}
+              {fmtCAD(quote.total)} CAD · {PAYMENT_OPTIONS.find((p) => p.id === payment)?.label}
             </p>
           </div>
           <ul className="mb-8 space-y-2 text-left text-sm text-[var(--muted)]">
@@ -194,7 +176,7 @@ export function BookingWizard() {
               <motion.div key="s0" {...stepAnim}>
                 <h1 className="mb-2 text-3xl font-bold">What are we booking?</h1>
                 <p className="mb-8 text-[var(--muted)]">Pick a service — you can fine-tune everything on the next step.</p>
-                <div className="grid gap-4 sm:grid-cols-3">
+                <div className="grid gap-4 sm:grid-cols-2">
                   {SERVICES.map(({ id, icon: Icon, title, blurb }) => (
                     <button
                       key={id}
@@ -216,14 +198,12 @@ export function BookingWizard() {
             {step === 1 && (
               <motion.div key="s1" {...stepAnim}>
                 <h1 className="mb-2 text-3xl font-bold">
-                  {service === 'storage' ? 'Pick your space' : service === 'movers' ? 'Build your crew' : 'Pick your equipment'}
+                  {service === 'storage' ? 'Pick your space' : 'Build your crew'}
                 </h1>
                 <p className="mb-8 text-[var(--muted)]">
                   {service === 'storage'
                     ? 'All spaces are gated, lit, and drive-up accessible.'
-                    : service === 'movers'
-                      ? 'Hourly rates, transparent minimums, no hidden fees.'
-                      : 'Day rates — pick up at the yard or have it delivered.'}
+                    : 'Hourly rates, transparent minimums, no hidden fees.'}
                 </p>
 
                 {service === 'storage' && (
@@ -242,7 +222,7 @@ export function BookingWizard() {
                           )}
                           <p className="font-bold">{s.label}</p>
                           <p className="mb-2 text-xl font-bold text-[var(--accent)]">
-                            {fmtUSD(s.monthly)}<span className="text-xs font-medium text-[var(--muted)]"> /mo</span>
+                            {fmtCAD(s.monthly)}<span className="text-xs font-medium text-[var(--muted)]"> /mo</span>
                           </p>
                           <p className="text-xs leading-relaxed text-[var(--muted)]">{s.blurb}</p>
                         </button>
@@ -279,7 +259,7 @@ export function BookingWizard() {
                           )}
                           <p className="font-bold">{c.label}</p>
                           <p className="mb-2 text-xl font-bold text-[var(--accent)]">
-                            {fmtUSD(c.hourly)}<span className="text-xs font-medium text-[var(--muted)]"> /hr · {c.minHours} hr min</span>
+                            {fmtCAD(c.hourly)}<span className="text-xs font-medium text-[var(--muted)]"> /hr · {c.minHours} hr min</span>
                           </p>
                           <p className="text-xs leading-relaxed text-[var(--muted)]">{c.blurb}</p>
                         </button>
@@ -302,46 +282,6 @@ export function BookingWizard() {
                       <label className="block">
                         <span className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><MapPin size={14} /> Unloading at</span>
                         <input placeholder="Street address, city" value={movers.to} onChange={(e) => setMovers({ ...movers, to: e.target.value })} className={input} />
-                      </label>
-                    </div>
-                  </div>
-                )}
-
-                {service === 'rental' && (
-                  <div className="space-y-6">
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      {RENTAL_ITEMS.map((r) => {
-                        const on = rental.items.includes(r.id);
-                        return (
-                          <button
-                            key={r.id}
-                            onClick={() => setRental({ ...rental, items: on ? rental.items.filter((i) => i !== r.id) : [...rental.items, r.id] })}
-                            className={`glass-card flex items-center gap-4 p-4 text-left ${on ? 'border-[var(--accent)] shadow-[0_0_0_1px_var(--accent)]' : ''}`}
-                          >
-                            <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md border-2 ${on ? 'border-[var(--accent)] bg-[var(--accent)] text-white' : 'border-[var(--border)]'}`}>
-                              {on && <Check size={14} />}
-                            </span>
-                            <span className="flex-1">
-                              <span className="block text-sm font-bold">{r.label}</span>
-                              <span className="block text-xs text-[var(--muted)]">{r.blurb}</span>
-                            </span>
-                            <span className="text-sm font-bold text-[var(--accent)]">{fmtUSD(r.daily)}<span className="text-[10px] font-medium text-[var(--muted)]">/day</span></span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <div className="grid gap-4 sm:grid-cols-3">
-                      <label className="block">
-                        <span className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><CalendarDays size={14} /> Start date</span>
-                        <input type="date" value={rental.date} onChange={(e) => setRental({ ...rental, date: e.target.value })} className={input} />
-                      </label>
-                      <label className="block">
-                        <span className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><Clock size={14} /> Days</span>
-                        <input type="number" min={1} max={30} value={rental.days} onChange={(e) => setRental({ ...rental, days: Number(e.target.value) })} className={input} />
-                      </label>
-                      <label className="mt-7 flex items-center gap-2.5">
-                        <input type="checkbox" checked={rental.delivery} onChange={(e) => setRental({ ...rental, delivery: e.target.checked })} className="h-4 w-4 accent-[var(--accent)]" />
-                        <span className="text-sm">Deliver to my site (+{fmtUSD(RENTAL_DELIVERY_FEE)})</span>
                       </label>
                     </div>
                   </div>
@@ -406,7 +346,7 @@ export function BookingWizard() {
               {step < 3 ? (
                 <button
                   onClick={() => setStep(step + 1)}
-                  disabled={step === 1 ? !detailsValid : !contactValid}
+                  disabled={step === 2 && !contactValid}
                   className="btn-primary text-sm disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Continue <ArrowRight size={16} />
@@ -434,10 +374,11 @@ export function BookingWizard() {
                 ))}
               </div>
               <div className="flex items-baseline justify-between pt-4">
-                <span className="font-bold">{fmtUSD(quote.total)}</span>
+                <span className="font-bold">{fmtCAD(quote.total)}</span>
                 <span className="text-xs text-[var(--muted)]">{quote.totalLabel}</span>
               </div>
-              <p className="mt-4 rounded-lg bg-[var(--glow-soft)] p-3 text-xs leading-relaxed text-[var(--muted)]">
+              <p className="mt-1 text-right text-[11px] text-[var(--muted)]">All prices in CAD</p>
+              <p className="mt-3 rounded-lg bg-[var(--glow-soft)] p-3 text-xs leading-relaxed text-[var(--muted)]">
                 💡 Prepay 6 months of storage for 5% off, or 12 months for 10% off — applied automatically.
               </p>
             </div>

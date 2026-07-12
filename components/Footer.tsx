@@ -6,26 +6,22 @@ import { Logo } from './Logo';
 
 const footerLinks = {
   Services: [
-    { label: 'Local Moving', href: '/#services' },
-    { label: 'Long-Distance', href: '/#services' },
-    { label: 'Packing Services', href: '/#services' },
-    { label: 'Storage Solutions', href: '/#services' },
-    { label: 'Outdoor Storage', href: '/#outdoor-storage' },
-    { label: 'Office Moving', href: '/#services' },
+    { label: 'The Yard', href: '/#yard' },
+    { label: 'Reserve Storage', href: '/book?service=storage' },
+    { label: 'Book Movers', href: '/book?service=movers' },
+    { label: 'Freight & Logistics', href: '/contact' },
   ],
   Shop: [
     { label: 'Moving Boxes', href: '/shop' },
     { label: 'Packing Supplies', href: '/shop' },
-    { label: 'Wardrobe Bags', href: '/shop' },
-    { label: 'Furniture Covers', href: '/shop' },
-    { label: 'Tape & Labels', href: '/shop' },
+    { label: 'Moving Gear', href: '/shop' },
+    { label: 'Bundle Kits', href: '/shop' },
   ],
   Company: [
-    { label: 'About Us', href: '/#about' },
-    { label: 'Testimonials', href: '/#testimonials' },
-    { label: 'Blog', href: '#' },
-    { label: 'Careers', href: '#' },
+    { label: 'Notes from the Yard', href: '/#notes' },
     { label: 'Contact', href: '/contact' },
+    { label: 'Privacy Policy', href: '#' },
+    { label: 'Terms of Service', href: '#' },
   ],
 };
 
@@ -51,8 +47,8 @@ export function Footer() {
               <Logo heightClass="h-16" />
             </div>
             <p className="text-[var(--muted)] text-sm leading-relaxed mb-6 max-w-xs">
-              Secure outdoor storage, equipment rentals, movers, and moving
-              supplies — a young yard with an old-school promise.
+              Secure outdoor storage, movers, logistics, and moving supplies —
+              a young yard with an old-school promise.
             </p>
             {/* Contact info */}
             <div className="space-y-2.5">
@@ -72,7 +68,7 @@ export function Footer() {
               </a>
               <div className="flex items-start gap-2.5 text-sm text-[var(--muted)]">
                 <MapPin size={14} className="mt-0.5 flex-shrink-0" />
-                <span>123 Mover Lane, Suite 400<br />Austin, TX 78701</span>
+                <span>123 Yard Road SE<br />Calgary, AB T2C 1A1</span>
               </div>
             </div>
           </div>

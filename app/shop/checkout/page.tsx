@@ -46,9 +46,9 @@ export default function CheckoutPage() {
   });
 
   const formatPrice = (cents: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+    new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(cents / 100);
 
-  const tax = Math.round(subtotal * 0.08);
+  const tax = Math.round(subtotal * 0.05); // GST (Alberta: 5%, no PST)
   const shipping = subtotal > 5000 ? 0 : 999;
   const total = subtotal + tax + shipping;
 
@@ -108,7 +108,7 @@ export default function CheckoutPage() {
           body: JSON.stringify({
             sourceId: result.token,
             amount: total,
-            currency: 'USD',
+            currency: 'CAD',
             buyerInfo: form,
             items: items.map(i => ({
               name: i.product.name,
@@ -249,7 +249,7 @@ export default function CheckoutPage() {
                         type="text"
                         required
                         className="form-input"
-                        placeholder="Austin"
+                        placeholder="Calgary"
                         value={form.city}
                         onChange={e => setForm({ ...form, city: e.target.value })}
                       />

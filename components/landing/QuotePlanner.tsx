@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Container, CalendarDays, Clock, ArrowRight } from 'lucide-react';
-import { STORAGE_SIZES, STORAGE_TERMS, fmtUSD, storageQuote } from '@/lib/booking';
+import { STORAGE_SIZES, STORAGE_TERMS, fmtCAD, storageQuote } from '@/lib/booking';
 
 const fieldShell =
   'flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3.5';
@@ -66,7 +66,7 @@ export function QuotePlanner() {
               <select value={size} onChange={(e) => setSize(e.target.value)} className={fieldInput} aria-label="Space size">
                 {STORAGE_SIZES.map((s) => (
                   <option key={s.id} value={s.id} className="bg-[#0E1013]">
-                    {s.label} — {fmtUSD(s.monthly)}/mo
+                    {s.label} — {fmtCAD(s.monthly)}/mo
                   </option>
                 ))}
               </select>
@@ -106,12 +106,12 @@ export function QuotePlanner() {
             {quote.term.months > 1 ? (
               <>
                 {quote.size.label} × {quote.term.months} months ={' '}
-                <span className="font-bold text-[#F5921E]">{fmtUSD(quote.total)}</span>
-                {quote.savings > 0 && <> — you save {fmtUSD(quote.savings)}</>}
+                <span className="font-bold text-[#F5921E]">{fmtCAD(quote.total)}</span>
+                {quote.savings > 0 && <> — you save {fmtCAD(quote.savings)}</>}
               </>
             ) : (
               <>
-                {quote.size.label} = <span className="font-bold text-[#F5921E]">{fmtUSD(quote.total)}/month</span>, cancel anytime
+                {quote.size.label} = <span className="font-bold text-[#F5921E]">{fmtCAD(quote.total)}/month</span>, cancel anytime
               </>
             )}
           </p>

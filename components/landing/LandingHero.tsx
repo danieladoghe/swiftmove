@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Warehouse, Play, ArrowRight } from 'lucide-react';
 
-const TITLE_WORDS = ['Where', 'Big', 'Moves', 'Begin'];
+const TITLE_WORDS = ['Moving', 'Made', 'Affordable', '& Simple'];
 
 export function LandingHero() {
   const ref = useRef<HTMLElement>(null);
@@ -67,8 +67,8 @@ export function LandingHero() {
           transition={{ delay: 0.7, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="mx-auto mb-10 max-w-2xl text-lg font-light leading-relaxed text-white/80 md:text-xl"
         >
-          Secure outdoor storage, pro-grade equipment rentals, and logistics that
-          show up on time — all in one yard.
+          Secure outdoor storage, movers you can book by the hour, and logistics
+          that show up on time — all in one yard.
         </motion.p>
 
         <motion.div

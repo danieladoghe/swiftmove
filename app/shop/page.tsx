@@ -65,7 +65,7 @@ export default function ShopPage() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="text-[var(--muted)] text-lg"
                 >
-                  Professional-grade supplies delivered to your door.
+                  Professional-grade supplies delivered to your door. All prices in CAD.
                 </motion.p>
               </div>
 

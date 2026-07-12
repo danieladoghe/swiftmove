@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
 
 interface BookingBody {
-  service: 'storage' | 'movers' | 'rental';
+  service: 'storage' | 'movers';
   summary: string;
   total: number;
   details: Record<string, unknown>;
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     const body: BookingBody = await request.json();
     const { service, contact, payment } = body;
 
-    if (!service || !['storage', 'movers', 'rental'].includes(service)) {
+    if (!service || !['storage', 'movers'].includes(service)) {
       return NextResponse.json({ success: false, error: 'Invalid service type.' }, { status: 400 });
     }
     if (!contact?.name || !contact?.email) {

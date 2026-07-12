@@ -7,7 +7,7 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react';
 const details = [
   { icon: Mail, label: 'hello@mosyard.com', href: 'mailto:hello@mosyard.com' },
   { icon: Phone, label: '(555) 123-4567', href: 'tel:+15551234567' },
-  { icon: MapPin, label: '123 Mover Lane, Suite 400 — Austin, TX 78701', href: undefined },
+  { icon: MapPin, label: '123 Yard Road SE — Calgary, AB T2C 1A1', href: undefined },
 ];
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
@@ -64,7 +64,7 @@ export function ContactSection() {
             Talk to the Yard
           </h2>
           <p className="mb-10 max-w-md text-lg font-light leading-relaxed text-[var(--muted)]">
-            Questions about a space, a rental, or a load that has to be somewhere
+            Questions about a space, a crew, or a load that has to be somewhere
             by Friday? A real person answers — usually Moyo.
           </p>
           <ul className="space-y-6">
@@ -113,7 +113,7 @@ export function ContactSection() {
                 <input required placeholder="Your name" value={form.name} onChange={update('name')} className={inputClasses} />
                 <input required type="email" placeholder="Email address" value={form.email} onChange={update('email')} className={inputClasses} />
               </div>
-              <input placeholder="Subject — storage, rentals, freight…" value={form.subject} onChange={update('subject')} className={inputClasses} />
+              <input placeholder="Subject — storage, movers, freight…" value={form.subject} onChange={update('subject')} className={inputClasses} />
               <textarea required rows={5} placeholder="What can we help you move or store?" value={form.message} onChange={update('message')} className={`${inputClasses} resize-none`} />
               <motion.button
                 type="submit"

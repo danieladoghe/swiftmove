@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Check } from 'lucide-react';
 import { Product } from '@/lib/products';
+import { formatPrice } from '@/lib/cart';
 import { useCart } from '@/components/CartContext';
 
 interface ProductCardProps {
@@ -15,9 +16,6 @@ export function ProductCard({ product, index }: ProductCardProps) {
   const { addItem } = useCart();
   const [selectedOption, setSelectedOption] = useState(product.options?.[0]);
   const [added, setAdded] = useState(false);
-
-  const formatPrice = (cents: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
 
   const handleAdd = () => {
     addItem(product, 1, selectedOption);

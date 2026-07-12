@@ -7,8 +7,7 @@ import Link from 'next/link';
 const explore = [
   { label: 'The Yard', href: '#yard' },
   { label: 'Shop Supplies', href: '#supplies' },
-  { label: 'Rentals', href: '#rentals' },
-  { label: 'Our Story', href: '#about' },
+  { label: 'Get a Quote', href: '#quote' },
   { label: 'Notes', href: '#notes' },
 ];
 
@@ -40,7 +39,7 @@ export function LandingFooter() {
               />
             </Link>
             <p className="mb-7 max-w-xs text-sm leading-relaxed text-white/50">
-              A young yard with an old-school promise — storage, movers, rentals,
+              A young yard with an old-school promise — storage, movers, logistics,
               and supplies, handled like they&apos;re our own.
             </p>
             {joined ? (
@@ -108,7 +107,7 @@ export function LandingFooter() {
               The Yard
             </h4>
             <address className="space-y-3 text-sm not-italic leading-relaxed text-white/70">
-              <p>123 Mover Lane, Suite 400<br />Austin, TX 78701</p>
+              <p>123 Yard Road SE<br />Calgary, AB T2C 1A1</p>
               <p>
                 <a href="tel:+15551234567" className="transition-colors hover:text-[#F5921E]">(555) 123-4567</a>
               </p>

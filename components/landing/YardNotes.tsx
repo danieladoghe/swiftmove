@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 const posts = [
@@ -8,19 +7,19 @@ const posts = [
     category: 'Storage',
     date: 'Jul 2, 2026',
     title: '20, 30, or 40 ft? How to size your outdoor space right the first time',
-    img: '/yard-container.jpg',
+    img: '/notes/note-sizing.svg',
   },
   {
     category: 'Savings',
     date: 'Jun 18, 2026',
     title: 'Prepay & save: how the 6-month (5%) and 12-month (10%) discounts work',
-    img: '/yard-door.jpg',
+    img: '/notes/note-savings.svg',
   },
   {
     category: 'Logistics',
     date: 'Jun 5, 2026',
     title: 'From our yard to your door: inside a modern freight day at Mo’s',
-    img: '/yard-truck.jpg',
+    img: '/notes/note-logistics.svg',
   },
 ];
 
@@ -55,13 +54,13 @@ export function YardNotes() {
               transition={{ duration: 0.8, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
               className="group cursor-pointer overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--surface)] shadow-sm transition-shadow duration-500 hover:shadow-xl"
             >
-              <div className="relative h-56 overflow-hidden">
-                <Image
+              <div className="relative h-56 overflow-hidden bg-[var(--surface-2)] p-5">
+                {/* eslint-disable-next-line @next/next/no-img-element -- local SVG illustration */}
+                <img
                   src={post.img}
                   alt=""
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
                 />
               </div>
               <div className="p-6">

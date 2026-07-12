@@ -9,8 +9,7 @@ import { ThemeToggle } from '../ThemeToggle';
 
 const links = [
   { label: 'The Yard', href: '#yard' },
-  { label: 'Rentals', href: '#rentals' },
-  { label: 'Story', href: '#about' },
+  { label: 'Supplies', href: '#supplies' },
   { label: 'Notes', href: '#notes' },
   { label: 'Shop', href: '/shop' },
   { label: 'Contact', href: '#contact' },

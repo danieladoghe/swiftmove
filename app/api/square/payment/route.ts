@@ -26,7 +26,7 @@ interface PaymentBody {
 export async function POST(request: NextRequest) {
   try {
     const body: PaymentBody = await request.json();
-    const { sourceId, amount, currency = 'USD', buyerInfo, items } = body;
+    const { sourceId, amount, currency = 'CAD', buyerInfo, items } = body;
 
     // Validation
     if (!sourceId || !amount || amount < 100) {

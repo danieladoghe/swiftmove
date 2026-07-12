@@ -1,5 +1,9 @@
 import { Product } from './products';
 
+/** Format a price in cents as Canadian dollars (site-wide currency). */
+export const formatPrice = (cents: number) =>
+  new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(cents / 100);
+
 export interface CartItem {
   product: Product;
   quantity: number;

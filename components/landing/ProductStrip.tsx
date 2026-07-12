@@ -5,10 +5,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Check, ArrowRight } from 'lucide-react';
 import { products } from '@/lib/products';
+import { formatPrice as fmt } from '@/lib/cart';
 import { useCart } from '@/components/CartContext';
-
-const fmt = (cents: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
 
 // Bestsellers + the family kit — one card per pillar of a typical move.
 const featured = products.filter(
