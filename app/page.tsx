@@ -1,6 +1,5 @@
 import { LandingNav } from '@/components/landing/LandingNav';
 import { LandingHero } from '@/components/landing/LandingHero';
-import { FeatureBar } from '@/components/landing/FeatureBar';
 import { YardGrid } from '@/components/landing/YardGrid';
 import { ProductStrip } from '@/components/landing/ProductStrip';
 import { QuotePlanner } from '@/components/landing/QuotePlanner';
@@ -14,7 +13,6 @@ export default function HomePage() {
       <LandingNav />
       <main>
         <LandingHero />
-        <FeatureBar />
         <YardGrid />
         <ProductStrip />
         <QuotePlanner />
