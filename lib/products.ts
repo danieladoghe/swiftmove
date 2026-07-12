@@ -3,8 +3,9 @@ export interface Product {
   name: string;
   description: string;
   price: number; // in cents
-  category: 'boxes' | 'packing' | 'bags' | 'tape' | 'specialty';
+  category: 'boxes' | 'packing' | 'bags' | 'tape' | 'gear' | 'specialty';
   emoji: string;
+  image?: string; // /products/*.svg illustration (swap for photos anytime)
   badge?: string;
   bestseller?: boolean;
   options?: string[];
@@ -19,6 +20,7 @@ export const products: Product[] = [
     price: 299,
     category: 'boxes',
     emoji: '📦',
+    image: '/products/box-s.svg',
     options: ['Pack of 5', 'Pack of 10', 'Pack of 25'],
     bestseller: true,
   },
@@ -29,6 +31,7 @@ export const products: Product[] = [
     price: 349,
     category: 'boxes',
     emoji: '📦',
+    image: '/products/box-m.svg',
     options: ['Pack of 5', 'Pack of 10', 'Pack of 25'],
     badge: 'Most Popular',
   },
@@ -39,6 +42,7 @@ export const products: Product[] = [
     price: 449,
     category: 'boxes',
     emoji: '📦',
+    image: '/products/box-l.svg',
     options: ['Pack of 5', 'Pack of 10'],
   },
   {
@@ -48,6 +52,7 @@ export const products: Product[] = [
     price: 549,
     category: 'boxes',
     emoji: '📦',
+    image: '/products/box-xl.svg',
     options: ['Pack of 5', 'Pack of 10'],
   },
   {
@@ -57,6 +62,7 @@ export const products: Product[] = [
     price: 1899,
     category: 'boxes',
     emoji: '👔',
+    image: '/products/wardrobe.svg',
     badge: 'Premium',
   },
   {
@@ -66,6 +72,7 @@ export const products: Product[] = [
     price: 799,
     category: 'boxes',
     emoji: '🍽️',
+    image: '/products/dishpack.svg',
   },
 
   // Packing Supplies
@@ -76,6 +83,7 @@ export const products: Product[] = [
     price: 1299,
     category: 'packing',
     emoji: '🫧',
+    image: '/products/bubble-wrap.svg',
     bestseller: true,
   },
   {
@@ -85,6 +93,7 @@ export const products: Product[] = [
     price: 2499,
     category: 'packing',
     emoji: '🫧',
+    image: '/products/bubble-wrap.svg',
   },
   {
     id: 'packing-paper',
@@ -93,6 +102,7 @@ export const products: Product[] = [
     price: 999,
     category: 'packing',
     emoji: '📄',
+    image: '/products/packing-paper.svg',
   },
   {
     id: 'foam-wrap',
@@ -101,10 +111,20 @@ export const products: Product[] = [
     price: 1499,
     category: 'packing',
     emoji: '🟪',
+    image: '/products/foam-wrap.svg',
     badge: 'New',
   },
+  {
+    id: 'stretch-wrap',
+    name: 'Stretch Wrap Roll',
+    description: '15" × 1000 ft industrial shrink wrap. Locks drawers shut and bundles items without adhesive.',
+    price: 1899,
+    category: 'packing',
+    emoji: '🌀',
+    image: '/products/stretch-wrap.svg',
+  },
 
-  // Bags
+  // Bags & Covers
   {
     id: 'mattress-bag-queen',
     name: 'Mattress Bag — Queen',
@@ -112,6 +132,7 @@ export const products: Product[] = [
     price: 1299,
     category: 'bags',
     emoji: '🛏️',
+    image: '/products/mattress-bag.svg',
   },
   {
     id: 'mattress-bag-king',
@@ -120,6 +141,7 @@ export const products: Product[] = [
     price: 1599,
     category: 'bags',
     emoji: '🛏️',
+    image: '/products/mattress-bag.svg',
   },
   {
     id: 'sofa-cover',
@@ -128,6 +150,7 @@ export const products: Product[] = [
     price: 1999,
     category: 'bags',
     emoji: '🛋️',
+    image: '/products/sofa-cover.svg',
     badge: 'Premium',
   },
   {
@@ -137,9 +160,10 @@ export const products: Product[] = [
     price: 2499,
     category: 'bags',
     emoji: '📺',
+    image: '/products/tv-bag.svg',
   },
 
-  // Tape
+  // Tape & Labels
   {
     id: 'packing-tape-3pk',
     name: 'Heavy-Duty Packing Tape — 3 Pack',
@@ -147,6 +171,7 @@ export const products: Product[] = [
     price: 1099,
     category: 'tape',
     emoji: '🟨',
+    image: '/products/tape.svg',
     bestseller: true,
   },
   {
@@ -156,9 +181,69 @@ export const products: Product[] = [
     price: 699,
     category: 'tape',
     emoji: '🏷️',
+    image: '/products/labels.svg',
+  },
+  {
+    id: 'box-cutter-2pk',
+    name: 'Safety Box Cutter — 2 Pack',
+    description: 'Retractable blades with auto-lock. Opens boxes fast without slicing contents.',
+    price: 799,
+    category: 'tape',
+    emoji: '🔪',
+    image: '/products/box-cutter.svg',
   },
 
-  // Specialty
+  // Moving Gear
+  {
+    id: 'moving-blankets-6pk',
+    name: 'Moving Blankets — 6 Pack',
+    description: '72" × 80" quilted furniture pads. The same blankets our own crews use on every job.',
+    price: 4999,
+    category: 'gear',
+    emoji: '🧵',
+    image: '/products/blankets.svg',
+    bestseller: true,
+  },
+  {
+    id: 'ratchet-straps-4pk',
+    name: 'Ratchet Tie-Down Straps — 4 Pack',
+    description: '1" × 15 ft straps rated to 500 lb working load. Keeps loads planted in the truck.',
+    price: 2499,
+    category: 'gear',
+    emoji: '🪢',
+    image: '/products/straps.svg',
+  },
+  {
+    id: 'furniture-sliders-16pk',
+    name: 'Furniture Sliders — 16 Pack',
+    description: 'Slide heavy furniture across carpet and hardwood without lifting or floor damage.',
+    price: 1299,
+    category: 'gear',
+    emoji: '🛝',
+    image: '/products/sliders.svg',
+  },
+  {
+    id: 'work-gloves',
+    name: 'Grip Work Gloves',
+    description: 'Textured palm grip with breathable backing. Sized M–XL.',
+    price: 999,
+    category: 'gear',
+    emoji: '🧤',
+    image: '/products/gloves.svg',
+    options: ['M', 'L', 'XL'],
+  },
+  {
+    id: 'hand-truck',
+    name: 'Folding Hand Truck',
+    description: '600 lb capacity steel hand truck. Folds flat for storage — a lifetime mover.',
+    price: 7999,
+    category: 'gear',
+    emoji: '🛒',
+    image: '/products/hand-truck.svg',
+    badge: 'Pro Grade',
+  },
+
+  // Bundle Kits
   {
     id: 'moving-kit-starter',
     name: 'Starter Moving Kit',
@@ -166,6 +251,7 @@ export const products: Product[] = [
     price: 4999,
     category: 'specialty',
     emoji: '🎁',
+    image: '/products/kit.svg',
     badge: 'Bundle',
   },
   {
@@ -175,6 +261,7 @@ export const products: Product[] = [
     price: 12999,
     category: 'specialty',
     emoji: '🏠',
+    image: '/products/kit.svg',
     badge: 'Best Value',
   },
 ];
@@ -184,6 +271,7 @@ export const categories = [
   { value: 'boxes', label: 'Moving Boxes' },
   { value: 'packing', label: 'Packing Supplies' },
   { value: 'bags', label: 'Covers & Bags' },
-  { value: 'tape', label: 'Tape & Labels' },
+  { value: 'tape', label: 'Tape & Tools' },
+  { value: 'gear', label: 'Moving Gear' },
   { value: 'specialty', label: 'Bundle Kits' },
 ];

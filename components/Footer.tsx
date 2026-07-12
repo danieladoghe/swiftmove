@@ -51,8 +51,8 @@ export function Footer() {
               <Logo heightClass="h-16" />
             </div>
             <p className="text-[var(--muted)] text-sm leading-relaxed mb-6 max-w-xs">
-              Secure outdoor storage, equipment rentals, and reliable logistics for
-              homes and businesses. Trusted by 6,000+ customers across 50+ cities.
+              Secure outdoor storage, equipment rentals, movers, and moving
+              supplies — a young yard with an old-school promise.
             </p>
             {/* Contact info */}
             <div className="space-y-2.5">

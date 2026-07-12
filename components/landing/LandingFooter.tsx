@@ -6,14 +6,15 @@ import Link from 'next/link';
 
 const explore = [
   { label: 'The Yard', href: '#yard' },
+  { label: 'Shop Supplies', href: '#supplies' },
   { label: 'Rentals', href: '#rentals' },
   { label: 'Our Story', href: '#about' },
   { label: 'Notes', href: '#notes' },
 ];
 
 const company = [
-  { label: 'Shop Supplies', href: '/shop' },
-  { label: 'Get a Quote', href: '#quote' },
+  { label: 'Book Now', href: '/book' },
+  { label: 'Shop', href: '/shop' },
   { label: 'Contact', href: '/contact' },
   { label: 'Privacy Policy', href: '#' },
 ];
@@ -39,8 +40,8 @@ export function LandingFooter() {
               />
             </Link>
             <p className="mb-7 max-w-xs text-sm leading-relaxed text-white/50">
-              Secure outdoor storage, equipment rentals, and reliable logistics —
-              trusted by 6,000+ customers across 50+ cities.
+              A young yard with an old-school promise — storage, movers, rentals,
+              and supplies, handled like they&apos;re our own.
             </p>
             {joined ? (
               <p className="text-sm font-medium text-[#F5921E]">

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Plus, Check } from 'lucide-react';
+import { ShoppingCart, Check } from 'lucide-react';
 import { Product } from '@/lib/products';
 import { useCart } from '@/components/CartContext';
 
@@ -38,7 +38,17 @@ export function ProductCard({ product, index }: ProductCardProps) {
         className="relative flex items-center justify-center h-44 text-6xl"
         style={{ background: 'var(--surface-2)' }}
       >
-        <span>{product.emoji}</span>
+        {product.image ? (
+          // eslint-disable-next-line @next/next/no-img-element -- local SVG illustrations need no optimization
+          <img
+            src={product.image}
+            alt={product.name}
+            className="h-full w-full object-contain p-3"
+            loading="lazy"
+          />
+        ) : (
+          <span>{product.emoji}</span>
+        )}
         {product.badge && (
           <span className="
             absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-bold

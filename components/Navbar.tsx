@@ -10,9 +10,8 @@ import { Logo } from './Logo';
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/#services', label: 'Services' },
-  { href: '/#outdoor-storage', label: 'Storage' },
-  { href: '/#about', label: 'About' },
+  { href: '/#yard', label: 'The Yard' },
+  { href: '/book', label: 'Book' },
   { href: '/shop', label: 'Shop' },
   { href: '/contact', label: 'Contact' },
 ];

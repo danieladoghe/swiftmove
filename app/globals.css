@@ -285,6 +285,22 @@ html.lenis body {
   pointer-events: none;
 }
 
+/* ─── Section background textures (dots + soft glows) ──────────────────── */
+.texture-dots {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--text) 8%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 26px 26px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 30%, transparent 75%);
+}
+
+.texture-glow {
+  background: radial-gradient(circle, var(--glow-soft) 0%, transparent 70%);
+  filter: blur(48px);
+}
+
 /* ─── Landing (cinematic homepage): headings inherit section colors ────── */
 /* The global `h1..h6 { color: var(--text) }` rule is unlayered and would
    force theme colors onto the fixed-palette landing. Headings inherit from

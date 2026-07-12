@@ -2,6 +2,7 @@ import { LandingNav } from '@/components/landing/LandingNav';
 import { LandingHero } from '@/components/landing/LandingHero';
 import { FeatureBar } from '@/components/landing/FeatureBar';
 import { YardGrid } from '@/components/landing/YardGrid';
+import { ProductStrip } from '@/components/landing/ProductStrip';
 import { RentalsSpotlight } from '@/components/landing/RentalsSpotlight';
 import { BrandStory } from '@/components/landing/BrandStory';
 import { QuotePlanner } from '@/components/landing/QuotePlanner';
@@ -17,6 +18,7 @@ export default function HomePage() {
         <LandingHero />
         <FeatureBar />
         <YardGrid />
+        <ProductStrip />
         <RentalsSpotlight />
         <BrandStory />
         <QuotePlanner />

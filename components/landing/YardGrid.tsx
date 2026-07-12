@@ -38,7 +38,7 @@ const spaces: YardSpace[] = [
     bullets: STORAGE_BULLETS,
     img: '/yard-container.jpg',
     span: 'lg:col-span-2 lg:row-span-2',
-    cta: { label: 'Reserve 30 ft', href: '/contact' },
+    cta: { label: 'Reserve 30 ft', href: '/book?service=storage&size=30' },
   },
   {
     id: '20ft',
@@ -50,7 +50,7 @@ const spaces: YardSpace[] = [
       'The right size for a 1-bedroom apartment, a season of gear, or a small vehicle. Drive up, drop off, done.',
     bullets: STORAGE_BULLETS,
     img: '/yard-door.jpg',
-    cta: { label: 'Reserve 20 ft', href: '/contact' },
+    cta: { label: 'Reserve 20 ft', href: '/book?service=storage&size=20' },
   },
   {
     id: '40ft',
@@ -62,7 +62,7 @@ const spaces: YardSpace[] = [
       'The biggest footprint in the yard. Fits an RV, a full-size trailer, or an entire household between moves — with room to spare.',
     bullets: STORAGE_BULLETS,
     img: '/yard-1.jpg',
-    cta: { label: 'Reserve 40 ft', href: '/contact' },
+    cta: { label: 'Reserve 40 ft', href: '/book?service=storage&size=40' },
   },
   {
     id: 'rentals',
@@ -79,7 +79,7 @@ const spaces: YardSpace[] = [
       'Maintained and inspected after every rental',
     ],
     img: '/yard-forklift.jpg',
-    cta: { label: 'Book Equipment', href: '/contact' },
+    cta: { label: 'Book Equipment', href: '/book?service=rental' },
   },
   {
     id: 'logistics',
@@ -121,8 +121,12 @@ export function YardGrid() {
   const [selected, setSelected] = useState<YardSpace | null>(null);
 
   return (
-    <section id="yard" className="scroll-mt-20 bg-white px-4 py-24 text-gray-900 sm:px-6 md:py-32 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+    <section id="yard" className="relative scroll-mt-20 overflow-hidden bg-[var(--bg)] px-4 py-24 text-[var(--text)] sm:px-6 md:py-32 lg:px-8">
+      {/* Background details */}
+      <div aria-hidden className="texture-dots pointer-events-none absolute inset-0" />
+      <div aria-hidden className="texture-glow pointer-events-none absolute -right-40 top-10 h-[420px] w-[420px] rounded-full" />
+      <div aria-hidden className="texture-glow pointer-events-none absolute -left-48 bottom-0 h-[360px] w-[360px] rounded-full" />
+      <div className="relative mx-auto max-w-7xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -131,13 +135,13 @@ export function YardGrid() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="mx-auto mb-16 max-w-2xl text-center"
         >
-          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[#D97B0C] sm:text-sm">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[var(--accent-dark)] sm:text-sm">
             The Yard
           </p>
           <h2 className="mb-5 text-4xl font-bold tracking-tight md:text-5xl">
             Space for Every Season
           </h2>
-          <p className="text-lg font-light leading-relaxed text-gray-600">
+          <p className="text-lg font-light leading-relaxed text-[var(--muted)]">
             Pick a footprint, book your gear, or hand us the whole move. Click any
             card to see details and pricing.
           </p>
@@ -195,7 +199,7 @@ export function YardGrid() {
               exit={{ opacity: 0, scale: 0.95, y: 12 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative grid w-full max-w-4xl overflow-hidden rounded-[28px] bg-white text-gray-900 shadow-2xl md:grid-cols-2"
+              className="relative grid w-full max-w-4xl overflow-hidden rounded-[28px] bg-[var(--surface)] text-[var(--text)] shadow-2xl md:grid-cols-2"
             >
               <button
                 onClick={() => setSelected(null)}
@@ -210,17 +214,17 @@ export function YardGrid() {
               </div>
 
               <div className="p-8 md:p-10">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#D97B0C]">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--accent-dark)]">
                   {selected.tag}
                 </p>
                 <h3 className="mb-1 text-3xl font-bold tracking-tight">{selected.title}</h3>
-                <p className="mb-4 text-lg font-bold text-[#D97B0C]">{selected.price}</p>
-                <p className="mb-6 leading-relaxed text-gray-600">{selected.description}</p>
+                <p className="mb-4 text-lg font-bold text-[var(--accent-dark)]">{selected.price}</p>
+                <p className="mb-6 leading-relaxed text-[var(--muted)]">{selected.description}</p>
                 <ul className="mb-8 space-y-2.5">
                   {selected.bullets.map((b) => (
-                    <li key={b} className="flex items-start gap-2.5 text-sm text-gray-700">
+                    <li key={b} className="flex items-start gap-2.5 text-sm">
                       <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#F5921E]/15">
-                        <Check size={12} className="text-[#D97B0C]" />
+                        <Check size={12} className="text-[var(--accent-dark)]" />
                       </span>
                       {b}
                     </li>

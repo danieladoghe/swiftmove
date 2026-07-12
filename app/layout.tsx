@@ -14,11 +14,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Mo's Yard | Storage, Rentals & Logistics",
   description:
-    "Mo's Yard offers secure outdoor storage, equipment rentals, and reliable logistics and moving services. Flexible month-to-month terms. Get a free quote today.",
-  keywords: ['outdoor storage', 'storage rental', 'equipment rentals', 'logistics', 'moving services', 'moving boxes', 'packing supplies', 'container storage'],
+    "Mo's Yard offers secure outdoor storage spaces, hourly moving crews, equipment rentals, and moving supplies. Book online in minutes with flexible payment options.",
+  keywords: ['outdoor storage', 'storage rental', 'equipment rentals', 'hire movers', 'moving services', 'moving boxes', 'packing supplies', 'container storage'],
   openGraph: {
     title: "Mo's Yard | Storage, Rentals & Logistics",
-    description: 'Secure outdoor storage, rentals, and logistics. Fully insured, 12+ years experience, 6,000+ customers served.',
+    description: 'Storage spaces, moving crews, equipment rentals, and supplies — book online in minutes.',
     type: 'website',
   },
 };

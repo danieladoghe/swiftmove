@@ -12,8 +12,10 @@ const points = [
 
 export function RentalsSpotlight() {
   return (
-    <section id="rentals" className="scroll-mt-20 bg-[#FAFAFA] px-4 py-24 text-gray-900 sm:px-6 md:py-32 lg:px-8">
-      <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
+    <section id="rentals" className="relative scroll-mt-20 overflow-hidden bg-[var(--bg)] px-4 py-24 text-[var(--text)] sm:px-6 md:py-32 lg:px-8">
+      <div aria-hidden className="texture-dots pointer-events-none absolute inset-0" />
+      <div aria-hidden className="texture-glow pointer-events-none absolute -right-44 bottom-8 h-[400px] w-[400px] rounded-full" />
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
         {/* Image with floating glass badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -48,13 +50,13 @@ export function RentalsSpotlight() {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[#D97B0C] sm:text-sm">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[var(--accent-dark)] sm:text-sm">
             Rentals
           </p>
           <h2 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl">
             Pro Equipment, When You Need It
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-gray-600">
+          <p className="mb-8 text-lg font-light leading-relaxed text-[var(--muted)]">
             Don&apos;t buy a forklift for one weekend. Rent exactly the muscle your
             move or job site needs — maintained, inspected, and ready the moment
             you pull in.
@@ -63,17 +65,17 @@ export function RentalsSpotlight() {
             {points.map((p) => (
               <li key={p} className="flex items-center gap-3.5">
                 <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#F5921E]/15">
-                  <Check size={15} className="text-[#D97B0C]" />
+                  <Check size={15} className="text-[var(--accent-dark)]" />
                 </span>
-                <span className="text-gray-700">{p}</span>
+                <span>{p}</span>
               </li>
             ))}
           </ul>
           <a
-            href="#quote"
-            className="group inline-flex items-center gap-2 font-semibold text-[#D97B0C] transition-colors hover:text-[#F5921E]"
+            href="/book?service=rental"
+            className="group inline-flex items-center gap-2 font-semibold text-[var(--accent-dark)] transition-colors hover:text-[#F5921E]"
           >
-            See rental rates
+            Book equipment now
             <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1.5" />
           </a>
         </motion.div>

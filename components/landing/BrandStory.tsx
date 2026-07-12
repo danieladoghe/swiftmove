@@ -5,8 +5,9 @@ import { motion } from 'framer-motion';
 
 export function BrandStory() {
   return (
-    <section id="about" className="scroll-mt-20 bg-white px-4 py-24 text-gray-900 sm:px-6 md:py-32 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+    <section id="about" className="relative scroll-mt-20 overflow-hidden bg-[var(--surface-2)] px-4 py-24 text-[var(--text)] sm:px-6 md:py-32 lg:px-8">
+      <div aria-hidden className="texture-dots pointer-events-none absolute inset-0" />
+      <div className="relative mx-auto max-w-7xl">
         {/* Minimal centered text block */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -15,16 +16,17 @@ export function BrandStory() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="mx-auto mb-16 max-w-2xl text-center"
         >
-          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[#D97B0C] sm:text-sm">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[var(--accent-dark)] sm:text-sm">
             Our Story
           </p>
           <h2 className="mb-5 text-4xl font-bold tracking-tight md:text-5xl">
             One Yard. Zero Hassle.
           </h2>
-          <p className="text-lg font-light leading-relaxed text-gray-600">
-            Mo&apos;s Yard started with one fenced lot and a promise: treat every
-            trailer, pallet, and box like it belongs to family. Twelve years and
-            6,000+ customers later, nothing about that has changed.
+          <p className="text-lg font-light leading-relaxed text-[var(--muted)]">
+            Mo&apos;s Yard is a young company with an old-school promise. Founder
+            Moyo started with one fenced lot, a forklift, and a simple rule —
+            treat every trailer, pallet, and box like it belongs to family. The
+            yard keeps growing; the rule doesn&apos;t change.
           </p>
         </motion.div>
 
@@ -50,7 +52,7 @@ export function BrandStory() {
                 &ldquo;If it matters enough to store, it matters enough to guard.&rdquo;
               </p>
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#FFC074]">
-                — Mo, Founder
+                — Moyo, Founder
               </p>
             </div>
           </div>

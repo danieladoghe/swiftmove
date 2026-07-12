@@ -26,8 +26,10 @@ const posts = [
 
 export function YardNotes() {
   return (
-    <section id="notes" className="scroll-mt-20 bg-[#FAFAFA] px-4 py-24 text-gray-900 sm:px-6 md:py-32 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+    <section id="notes" className="relative scroll-mt-20 overflow-hidden bg-[var(--surface-2)] px-4 py-24 text-[var(--text)] sm:px-6 md:py-32 lg:px-8">
+      <div aria-hidden className="texture-dots pointer-events-none absolute inset-0" />
+      <div aria-hidden className="texture-glow pointer-events-none absolute -right-40 top-24 h-[360px] w-[360px] rounded-full" />
+      <div className="relative mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -35,7 +37,7 @@ export function YardNotes() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="mx-auto mb-16 max-w-2xl text-center"
         >
-          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[#D97B0C] sm:text-sm">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[var(--accent-dark)] sm:text-sm">
             Notes from the Yard
           </p>
           <h2 className="text-4xl font-bold tracking-tight md:text-5xl">
@@ -51,7 +53,7 @@ export function YardNotes() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
               transition={{ duration: 0.8, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="group cursor-pointer overflow-hidden rounded-[24px] bg-white shadow-sm transition-shadow duration-500 hover:shadow-xl"
+              className="group cursor-pointer overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--surface)] shadow-sm transition-shadow duration-500 hover:shadow-xl"
             >
               <div className="relative h-56 overflow-hidden">
                 <Image
@@ -64,12 +66,12 @@ export function YardNotes() {
               </div>
               <div className="p-6">
                 <div className="mb-3 flex items-center gap-3">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-[#D97B0C]">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--accent-dark)]">
                     {post.category}
                   </span>
-                  <span className="text-sm text-gray-500">{post.date}</span>
+                  <span className="text-sm text-[var(--muted)]">{post.date}</span>
                 </div>
-                <h3 className="line-clamp-2 text-lg font-bold leading-snug transition-colors group-hover:text-[#D97B0C]">
+                <h3 className="line-clamp-2 text-lg font-bold leading-snug transition-colors group-hover:text-[var(--accent-dark)]">
                   {post.title}
                 </h3>
               </div>

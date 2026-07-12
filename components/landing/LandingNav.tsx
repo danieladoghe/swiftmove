@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { ThemeToggle } from '../ThemeToggle';
 
 const links = [
   { label: 'The Yard', href: '#yard' },
@@ -39,12 +40,12 @@ export function LandingNav() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" aria-label="Mo's Yard home" className="flex items-center">
             <Image
-              src="/mos-yard-wordmark.png"
-              alt="Mo's Yard"
-              width={1088}
-              height={214}
+              src="/mos-yard-logo.png"
+              alt="Mo's Yard — Storage, Rentals, Logistics"
+              width={1124}
+              height={423}
               priority
-              className="h-8 w-auto sm:h-9"
+              className="h-12 w-auto sm:h-14"
             />
           </Link>
 
@@ -62,25 +63,29 @@ export function LandingNav() {
             ))}
           </nav>
 
-          <div className="hidden lg:block">
-            <motion.a
-              href="#quote"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-block rounded-full bg-[#F5921E] px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#F5921E]/25 transition-colors hover:bg-[#FFA733]"
-            >
-              Get a Quote
-            </motion.a>
+          <div className="hidden items-center gap-3 lg:flex">
+            <ThemeToggle />
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                href="/book"
+                className="inline-block rounded-full bg-[#F5921E] px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#F5921E]/25 transition-colors hover:bg-[#FFA733]"
+              >
+                Book Now
+              </Link>
+            </motion.div>
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md lg:hidden"
-          >
-            {open ? <X size={18} /> : <Menu size={18} />}
-          </button>
+          {/* Mobile: theme + toggle */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <ThemeToggle />
+            <button
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md"
+            >
+              {open ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
         </div>
       </motion.header>
 
@@ -110,16 +115,20 @@ export function LandingNav() {
                 </Link>
               </motion.div>
             ))}
-            <motion.a
-              href="#quote"
-              onClick={() => setOpen(false)}
+            <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.08 * links.length, duration: 0.5 }}
-              className="mt-6 rounded-full bg-[#F5921E] px-8 py-3.5 text-lg font-semibold text-white"
+              className="mt-6"
             >
-              Get a Quote
-            </motion.a>
+              <Link
+                href="/book"
+                onClick={() => setOpen(false)}
+                className="rounded-full bg-[#F5921E] px-8 py-3.5 text-lg font-semibold text-white"
+              >
+                Book Now
+              </Link>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

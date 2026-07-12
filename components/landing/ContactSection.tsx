@@ -43,12 +43,13 @@ export function ContactSection() {
     }
   };
 
-  const inputClasses =
-    'w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-[#F5921E] focus:ring-2 focus:ring-[#F5921E]/20';
+  const inputClasses = 'form-input text-sm';
 
   return (
-    <section id="contact" className="scroll-mt-20 bg-[#FAFAFA] px-4 py-24 text-gray-900 sm:px-6 md:py-32 lg:px-8">
-      <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-2 lg:gap-20">
+    <section id="contact" className="relative scroll-mt-20 overflow-hidden bg-[var(--bg)] px-4 py-24 text-[var(--text)] sm:px-6 md:py-32 lg:px-8">
+      <div aria-hidden className="texture-dots pointer-events-none absolute inset-0" />
+      <div aria-hidden className="texture-glow pointer-events-none absolute -left-44 top-16 h-[400px] w-[400px] rounded-full" />
+      <div className="relative mx-auto grid max-w-7xl gap-14 lg:grid-cols-2 lg:gap-20">
         {/* Details */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -56,24 +57,24 @@ export function ContactSection() {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[#D97B0C] sm:text-sm">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[var(--accent-dark)] sm:text-sm">
             Contact
           </p>
           <h2 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl">
             Talk to the Yard
           </h2>
-          <p className="mb-10 max-w-md text-lg font-light leading-relaxed text-gray-600">
+          <p className="mb-10 max-w-md text-lg font-light leading-relaxed text-[var(--muted)]">
             Questions about a space, a rental, or a load that has to be somewhere
-            by Friday? A real person answers — usually Mo.
+            by Friday? A real person answers — usually Moyo.
           </p>
           <ul className="space-y-6">
             {details.map(({ icon: Icon, label, href }) => {
               const row = (
                 <span className="group flex items-center gap-4">
-                  <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#0E1013] text-white transition-colors duration-300 group-hover:bg-[#F5921E]">
+                  <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[var(--text)] text-[var(--bg)] transition-colors duration-300 group-hover:bg-[#F5921E] group-hover:text-white">
                     <Icon size={18} />
                   </span>
-                  <span className="text-gray-700 transition-colors group-hover:text-[#D97B0C]">
+                  <span className="transition-colors group-hover:text-[var(--accent-dark)]">
                     {label}
                   </span>
                 </span>
@@ -93,15 +94,15 @@ export function ContactSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-[24px] border border-gray-100 bg-white p-8 shadow-2xl md:p-10"
+          className="rounded-[24px] border border-[var(--border)] bg-[var(--surface)] p-8 shadow-2xl md:p-10"
         >
           {status === 'sent' ? (
             <div className="flex h-full min-h-[320px] flex-col items-center justify-center text-center">
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#F5921E]/15">
-                <Send size={22} className="text-[#D97B0C]" />
+                <Send size={22} className="text-[var(--accent-dark)]" />
               </div>
               <h3 className="mb-2 text-2xl font-bold">Message received</h3>
-              <p className="max-w-sm text-gray-600">
+              <p className="max-w-sm text-[var(--muted)]">
                 Thanks for reaching out — the yard will get back to you within one
                 business day.
               </p>

@@ -78,7 +78,7 @@ export function LandingHero() {
           className="flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <motion.a
-            href="#quote"
+            href="/book"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="group inline-flex items-center gap-2 rounded-full bg-[#F5921E] px-8 py-4 text-base font-semibold text-white shadow-xl shadow-[#F5921E]/25 transition-colors hover:bg-[#FFA733]"
