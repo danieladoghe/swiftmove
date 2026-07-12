@@ -22,7 +22,9 @@ export function LandingHero() {
           loop
           playsInline
           poster="/hero-poster.jpg"
-          className="h-full w-full object-cover"
+          // The truck sits in the right of the 16:9 frame — bias the portrait
+          // crop toward it so phones don't show only the warehouse door.
+          className="h-full w-full object-cover object-[76%_center] md:object-center"
         >
           <source src="/hero.mp4" type="video/mp4" />
         </video>
