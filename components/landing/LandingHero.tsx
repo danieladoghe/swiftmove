@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Warehouse, Play, ArrowRight } from 'lucide-react';
 
@@ -8,19 +8,56 @@ const TITLE_WORDS = ['Moving', 'Made', 'Affordable', '& Simple'];
 
 export function LandingHero() {
   const ref = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const videoY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.9], [1, 0]);
+
+  // Autoplay is blocked by Low Power Mode, data saver, and some in-app
+  // browsers. Retry playback whenever the platform gives us an opening —
+  // readiness, tab focus, the first user gesture — and resume if the
+  // browser pauses the loop, so the truck never sits frozen.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    v.muted = true;
+    v.defaultMuted = true;
+
+    const tryPlay = () => {
+      if (document.hidden || !v.paused) return;
+      v.play().catch(() => { /* blocked — a later trigger will retry */ });
+    };
+
+    tryPlay();
+    v.addEventListener('canplay', tryPlay);
+    v.addEventListener('pause', tryPlay); // no controls exist, so any pause is the browser's
+    document.addEventListener('visibilitychange', tryPlay);
+    window.addEventListener('focus', tryPlay);
+    // First-gesture fallback: platforms always allow play() after interaction.
+    const gestures: (keyof WindowEventMap)[] = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
+    gestures.forEach((e) => window.addEventListener(e, tryPlay, { passive: true }));
+
+    return () => {
+      v.removeEventListener('canplay', tryPlay);
+      v.removeEventListener('pause', tryPlay);
+      document.removeEventListener('visibilitychange', tryPlay);
+      window.removeEventListener('focus', tryPlay);
+      gestures.forEach((e) => window.removeEventListener(e, tryPlay));
+    };
+  }, []);
 
   return (
     <section ref={ref} className="relative flex h-[100vh] min-h-[700px] items-center justify-center overflow-hidden bg-[#0E1013]">
       {/* Video background with scroll parallax */}
       <motion.div style={{ y: videoY }} className="absolute inset-0">
         <video
+          ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
+          preload="auto"
           poster="/hero-poster.jpg"
           // The truck sits in the right of the 16:9 frame — bias the portrait
           // crop toward it so phones don't show only the warehouse door.
