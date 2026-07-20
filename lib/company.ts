@@ -42,3 +42,6 @@ export const UHAUL_URL = 'https://www.uhaul.com/';
 
 export const RETURN_POLICY =
   'Returns accepted within 30 days for unused, unopened items with proof of purchase. Opened, damaged, or special-order items are non-refundable unless defective.';
+
+export const DELIVERY_NOTE =
+  'Local delivery across Okotoks, High River, Foothills County, and South Calgary — delivery fee confirmed when we process your order.';

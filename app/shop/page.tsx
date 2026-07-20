@@ -65,7 +65,7 @@ export default function ShopPage() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="text-[var(--muted)] text-lg"
                 >
-                  Reserve online, pay at pickup in Okotoks. All prices in CAD.
+                  Reserve online — pickup in Okotoks or local delivery. All prices in CAD.
                 </motion.p>
               </div>
 

@@ -3,6 +3,8 @@ import { randomUUID } from 'crypto';
 
 interface OrderBody {
   contact: { name: string; email: string; phone?: string };
+  fulfillment?: 'pickup' | 'delivery';
+  address?: { street: string; city: string; postal?: string };
   items: { id: string; name: string; option?: string; quantity: number; price: number }[];
   subtotal: number; // cents
   gst: number; // cents
@@ -11,8 +13,8 @@ interface OrderBody {
 }
 
 /**
- * Phase 1 shop flow: reserve items online, pay at pickup.
- * Full e-commerce (online payment, inventory) comes later.
+ * Phase 1 shop flow: reserve items online, pay at pickup or on delivery
+ * (delivery fee confirmed manually). Full e-commerce comes later.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -24,12 +26,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Your cart is empty.' }, { status: 400 });
     }
 
-    const reference = `PU-${randomUUID().slice(0, 6).toUpperCase()}`;
+    const fulfillment = body.fulfillment === 'delivery' ? 'delivery' : 'pickup';
+    if (fulfillment === 'delivery' && (!body.address?.street || !body.address?.city)) {
+      return NextResponse.json({ success: false, error: 'A delivery address is required.' }, { status: 400 });
+    }
+
+    const reference = `${fulfillment === 'delivery' ? 'DL' : 'PU'}-${randomUUID().slice(0, 6).toUpperCase()}`;
 
     // TODO: Email confirmation to the customer + notify the yard once an
     // email provider is configured.
-    console.log("[Mo's Yard] Pickup reservation:", {
+    console.log("[Mo's Yard] Supply order:", {
       reference,
+      fulfillment,
+      address: fulfillment === 'delivery' ? body.address : undefined,
       contact: body.contact,
       items: body.items.map((i) => `${i.quantity}× ${i.name}${i.option ? ` (${i.option})` : ''}`),
       total: (body.total / 100).toFixed(2),

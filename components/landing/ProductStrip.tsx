@@ -47,8 +47,8 @@ export function ProductStrip() {
               Pack Like Our Crews Do
             </h2>
             <p className="text-lg font-light leading-relaxed text-[var(--muted)]">
-              Boxes, blankets, tape, and gear — reserve online and pay when you
-              pick up at the yard. All prices in CAD.
+              Boxes, blankets, tape, and gear — reserve online, then pick up at
+              the yard or get local delivery. All prices in CAD.
             </p>
           </div>
           <Link

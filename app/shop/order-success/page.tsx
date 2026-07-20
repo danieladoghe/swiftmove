@@ -4,12 +4,13 @@ import { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { CheckCircle2, Home, ShoppingBag, MapPin, Clock } from 'lucide-react';
-import { COMPANY, RETURN_POLICY } from '@/lib/company';
+import { CheckCircle2, Home, ShoppingBag, MapPin, Clock, Truck } from 'lucide-react';
+import { COMPANY, RETURN_POLICY, DELIVERY_NOTE } from '@/lib/company';
 
 function OrderSuccessContent() {
   const params = useSearchParams();
   const ref = params.get('ref');
+  const isDelivery = params.get('method') === 'delivery';
 
   return (
     <div className="min-h-screen pt-20 flex items-center justify-center" style={{ background: 'var(--bg)' }}>
@@ -32,28 +33,38 @@ function OrderSuccessContent() {
           <CheckCircle2 size={36} className="text-[var(--accent)]" />
         </motion.div>
 
-        <h1 className="text-3xl font-bold mb-3">Reserved for Pickup!</h1>
+        <h1 className="text-3xl font-bold mb-3">{isDelivery ? 'Order Received!' : 'Reserved for Pickup!'}</h1>
         {ref && (
           <p className="mb-2 text-xl font-bold tracking-widest text-[var(--accent)]">{ref}</p>
         )}
         <p className="text-[var(--muted)] text-sm mb-8">
-          Your supplies are set aside at the yard — pay when you pick up
-          (credit, debit, or e-transfer).
+          {isDelivery
+            ? "We'll call to confirm your delivery window and fee — pay on delivery (credit, debit, or e-transfer)."
+            : 'Your supplies are set aside at the yard — pay when you pick up (credit, debit, or e-transfer).'}
         </p>
 
         <div className="
           bg-[var(--surface-2)] rounded-xl p-4 border border-[var(--border)] mb-6 text-left space-y-3
         ">
-          <div className="flex items-start gap-2.5 text-sm">
-            <MapPin size={15} className="mt-0.5 flex-shrink-0 text-[var(--accent)]" />
-            <span className="font-medium">{COMPANY.address.full}</span>
-          </div>
-          <div className="flex items-start gap-2.5 text-sm">
-            <Clock size={15} className="mt-0.5 flex-shrink-0 text-[var(--accent)]" />
-            <span className="text-[var(--muted)]">
-              Mon–Tue & Sat 12–4 · Wed–Fri 10–6 · Sun closed
-            </span>
-          </div>
+          {isDelivery ? (
+            <div className="flex items-start gap-2.5 text-sm">
+              <Truck size={15} className="mt-0.5 flex-shrink-0 text-[var(--accent)]" />
+              <span className="text-[var(--muted)]">{DELIVERY_NOTE}</span>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-start gap-2.5 text-sm">
+                <MapPin size={15} className="mt-0.5 flex-shrink-0 text-[var(--accent)]" />
+                <span className="font-medium">{COMPANY.address.full}</span>
+              </div>
+              <div className="flex items-start gap-2.5 text-sm">
+                <Clock size={15} className="mt-0.5 flex-shrink-0 text-[var(--accent)]" />
+                <span className="text-[var(--muted)]">
+                  Mon–Tue & Sat 12–4 · Wed–Fri 10–6 · Sun closed
+                </span>
+              </div>
+            </>
+          )}
           <div className="flex justify-between text-sm">
             <span className="text-[var(--muted)]">Questions</span>
             <a href={`mailto:${COMPANY.email}`} className="font-medium text-[var(--accent)]">{COMPANY.email}</a>

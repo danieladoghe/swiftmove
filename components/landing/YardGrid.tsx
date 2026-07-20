@@ -24,9 +24,9 @@ const services = [
   {
     icon: Package,
     title: 'Moving Supplies',
-    price: 'Reserve for pickup',
-    blurb: 'Boxes, tape, covers, and gear — reserve online, pay when you pick up at the yard.',
-    cta: { label: 'Reserve for Pickup', href: '/shop', external: false },
+    price: 'Pickup or delivery',
+    blurb: 'Boxes, tape, covers, and gear — reserve online, then pick up at the yard or get it delivered.',
+    cta: { label: 'Reserve Supplies', href: '/shop', external: false },
   },
 ];
 
