@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
+import { COMPANY, HOURS } from '@/lib/company';
 
 const details = [
-  { icon: Mail, label: 'hello@mosyard.com', href: 'mailto:hello@mosyard.com' },
-  { icon: Phone, label: '(555) 123-4567', href: 'tel:+15551234567' },
-  { icon: MapPin, label: '123 Yard Road SE — Calgary, AB T2C 1A1', href: undefined },
+  { icon: Mail, label: COMPANY.email, href: `mailto:${COMPANY.email}` },
+  { icon: Phone, label: COMPANY.phone.display, href: `tel:${COMPANY.phone.tel}` },
+  { icon: MapPin, label: COMPANY.address.full, href: COMPANY.address.mapsUrl },
 ];
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
@@ -67,7 +68,7 @@ export function ContactSection() {
             Questions about a space, a crew, or a load that has to be somewhere
             by Friday? A real person answers — usually Moyo.
           </p>
-          <ul className="space-y-6">
+          <ul className="mb-10 space-y-6">
             {details.map(({ icon: Icon, label, href }) => {
               const row = (
                 <span className="group flex items-center gap-4">
@@ -81,11 +82,29 @@ export function ContactSection() {
               );
               return (
                 <li key={label}>
-                  {href ? <a href={href}>{row}</a> : row}
+                  {href ? <a href={href} {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{row}</a> : row}
                 </li>
               );
             })}
           </ul>
+
+          {/* Office hours */}
+          <div className="max-w-sm rounded-[20px] border border-[var(--border)] bg-[var(--surface)] p-6">
+            <p className="mb-3 flex items-center gap-2 font-bold">
+              <Clock size={16} className="text-[var(--accent)]" /> Office hours
+            </p>
+            <div className="space-y-1.5 text-sm text-[var(--muted)]">
+              {HOURS.map(({ day, hours }) => (
+                <p key={day} className="flex justify-between gap-6">
+                  <span>{day}</span>
+                  <span className={hours === 'Closed' ? '' : 'font-medium text-[var(--text)]'}>{hours}</span>
+                </p>
+              ))}
+            </div>
+            <p className="mt-3 text-xs font-semibold text-[var(--accent-dark)]">
+              Storage customers have 24/7 gated access.
+            </p>
+          </div>
         </motion.div>
 
         {/* Form card */}
@@ -127,7 +146,7 @@ export function ContactSection() {
               </motion.button>
               {status === 'error' && (
                 <p className="text-center text-sm text-red-600">
-                  Something went wrong — please try again or email hello@mosyard.com.
+                  Something went wrong — please try again or email {COMPANY.email}.
                 </p>
               )}
             </form>

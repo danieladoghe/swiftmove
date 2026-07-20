@@ -2,6 +2,8 @@ import { LandingNav } from '@/components/landing/LandingNav';
 import { LandingHero } from '@/components/landing/LandingHero';
 import { YardGrid } from '@/components/landing/YardGrid';
 import { ProductStrip } from '@/components/landing/ProductStrip';
+import { FreightSection } from '@/components/landing/FreightSection';
+import { BrandStory } from '@/components/landing/BrandStory';
 import { QuotePlanner } from '@/components/landing/QuotePlanner';
 import { YardNotes } from '@/components/landing/YardNotes';
 import { ContactSection } from '@/components/landing/ContactSection';
@@ -15,6 +17,8 @@ export default function HomePage() {
         <LandingHero />
         <YardGrid />
         <ProductStrip />
+        <FreightSection />
+        <BrandStory />
         <QuotePlanner />
         <YardNotes />
         <ContactSection />

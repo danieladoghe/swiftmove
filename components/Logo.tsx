@@ -4,8 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const SOURCES = {
-  full: { src: '/mos-yard-logo.png', width: 1124, height: 423 },
-  wordmark: { src: '/mos-yard-wordmark.png', width: 1088, height: 214 },
+  full: { src: '/mos-yard-logo.png', width: 679, height: 266 },
+  wordmark: { src: '/mos-yard-wordmark.png', width: 655, height: 134 },
 } as const;
 
 interface LogoProps {

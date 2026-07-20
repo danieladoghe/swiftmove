@@ -47,28 +47,28 @@ export function Footer() {
               <Logo heightClass="h-16" />
             </div>
             <p className="text-[var(--muted)] text-sm leading-relaxed mb-6 max-w-xs">
-              Secure outdoor storage, movers, logistics, and moving supplies —
-              a young yard with an old-school promise.
+              Secure outdoor storage, U-Haul rentals, moving supplies, and
+              logistics support for Okotoks and surrounding communities.
             </p>
             {/* Contact info */}
             <div className="space-y-2.5">
               <a
-                href="tel:+15551234567"
+                href="tel:+14039034107"
                 className="flex items-center gap-2.5 text-sm text-[var(--muted)] hover:text-[var(--accent)] transition-colors"
               >
                 <Phone size={14} />
-                (555) 123-4567
+                403-903-4107
               </a>
               <a
-                href="mailto:hello@mosyard.com"
+                href="mailto:info@mosyard.ca"
                 className="flex items-center gap-2.5 text-sm text-[var(--muted)] hover:text-[var(--accent)] transition-colors"
               >
                 <Mail size={14} />
-                hello@mosyard.com
+                info@mosyard.ca
               </a>
               <div className="flex items-start gap-2.5 text-sm text-[var(--muted)]">
                 <MapPin size={14} className="mt-0.5 flex-shrink-0" />
-                <span>123 Yard Road SE<br />Calgary, AB T2C 1A1</span>
+                <span>247 Don Seaman Way<br />Okotoks, AB T1S 0C2</span>
               </div>
             </div>
           </div>

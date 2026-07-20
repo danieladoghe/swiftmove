@@ -47,8 +47,8 @@ export function ProductStrip() {
               Pack Like Our Crews Do
             </h2>
             <p className="text-lg font-light leading-relaxed text-[var(--muted)]">
-              The same boxes, blankets, and tape we use on every job — shipped to
-              your door or waiting at the yard.
+              Boxes, blankets, tape, and gear — reserve online and pay when you
+              pick up at the yard. All prices in CAD.
             </p>
           </div>
           <Link
@@ -118,7 +118,7 @@ export function ProductStrip() {
           <Link href="/shop" className="font-semibold text-[var(--accent-dark)] underline-offset-2 hover:underline">
             shop
           </Link>{' '}
-          to review your cart and check out.
+          to review your cart and reserve for pickup.
         </motion.p>
       </div>
     </section>

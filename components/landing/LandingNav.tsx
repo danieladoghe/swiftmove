@@ -10,7 +10,8 @@ import { ThemeToggle } from '../ThemeToggle';
 const links = [
   { label: 'The Yard', href: '#yard' },
   { label: 'Supplies', href: '#supplies' },
-  { label: 'Notes', href: '#notes' },
+  { label: 'Freight', href: '#freight' },
+  { label: 'Story', href: '#about' },
   { label: 'Shop', href: '/shop' },
   { label: 'Contact', href: '#contact' },
 ];
@@ -41,8 +42,8 @@ export function LandingNav() {
             <Image
               src="/mos-yard-logo.png"
               alt="Mo's Yard — Storage, Rentals, Logistics"
-              width={1124}
-              height={423}
+              width={679}
+              height={266}
               priority
               className="h-12 w-auto sm:h-14"
             />

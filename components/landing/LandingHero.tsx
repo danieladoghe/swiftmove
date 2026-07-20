@@ -69,8 +69,8 @@ export function LandingHero() {
           transition={{ delay: 0.7, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="mx-auto mb-10 max-w-2xl text-lg font-light leading-relaxed text-white/80 md:text-xl"
         >
-          Secure outdoor storage, movers you can book by the hour, and logistics
-          that show up on time — all in one yard.
+          Secure outdoor storage, U-Haul rentals, moving supplies, and freight
+          support — all in one yard in Okotoks, Alberta.
         </motion.p>
 
         <motion.div

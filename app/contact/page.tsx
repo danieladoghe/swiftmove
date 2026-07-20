@@ -5,18 +5,18 @@ import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock, Send, Loader2, CheckCircle2 } from 'lucide-react';
 
 const contactDetails = [
-  { icon: Phone, label: 'Phone', value: '(555) 123-4567', href: 'tel:+15551234567' },
-  { icon: Mail, label: 'Email', value: 'hello@mosyard.com', href: 'mailto:hello@mosyard.com' },
-  { icon: MapPin, label: 'The Yard', value: '123 Yard Road SE\nCalgary, AB T2C 1A1', href: '#' },
-  { icon: Clock, label: 'Hours', value: 'Mon–Fri: 7am–8pm\nSat–Sun: 8am–5pm', href: '#' },
+  { icon: Phone, label: 'Phone', value: '403-903-4107', href: 'tel:+14039034107' },
+  { icon: Mail, label: 'Email', value: 'info@mosyard.ca', href: 'mailto:info@mosyard.ca' },
+  { icon: MapPin, label: 'The Yard', value: '247 Don Seaman Way\nOkotoks, AB T1S 0C2', href: "https://www.google.com/maps/search/?api=1&query=Mo's+Yard+247+Don+Seaman+Way+Okotoks+AB" },
+  { icon: Clock, label: 'Hours', value: 'Mon–Tue & Sat: 12pm–4pm\nWed–Fri: 10am–6pm · Sun: Closed', href: '#' },
 ];
 
 const moveTypes = [
-  'Local Move (same city)',
-  'Long-Distance Move (different state)',
-  'Office / Commercial Move',
-  'Storage Only',
-  'Packing Services Only',
+  'Outdoor Storage',
+  'Custom Contractor Yard',
+  'Freight & Logistics',
+  'U-Haul Rental',
+  'Moving Supplies',
   'Other',
 ];
 
@@ -148,7 +148,7 @@ export default function ContactPage() {
             >
               <div className="text-center">
                 <MapPin size={32} className="text-[var(--accent)] mx-auto mb-2 opacity-60" />
-                <p className="font-medium">123 Yard Road SE, Calgary AB</p>
+                <p className="font-medium">247 Don Seaman Way, Okotoks AB</p>
                 <p className="text-xs mt-1">Replace with Google Maps embed</p>
               </div>
             </motion.div>
@@ -229,7 +229,7 @@ export default function ContactPage() {
                   {/* Addresses */}
                   <div>
                     <label className="block text-sm font-medium text-[var(--muted)] mb-1.5">Moving From (City/State) *</label>
-                    <input type="text" required className="form-input" placeholder="Calgary, AB" value={form.fromAddress} onChange={update('fromAddress')} />
+                    <input type="text" required className="form-input" placeholder="Okotoks, AB" value={form.fromAddress} onChange={update('fromAddress')} />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-[var(--muted)] mb-1.5">Moving To (City/State) *</label>

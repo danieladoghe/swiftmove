@@ -1,17 +1,23 @@
 'use client';
 
+import { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { CheckCircle2, Home, ShoppingBag } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { CheckCircle2, Home, ShoppingBag, MapPin, Clock } from 'lucide-react';
+import { COMPANY, RETURN_POLICY } from '@/lib/company';
 
-export default function OrderSuccessPage() {
+function OrderSuccessContent() {
+  const params = useSearchParams();
+  const ref = params.get('ref');
+
   return (
     <div className="min-h-screen pt-20 flex items-center justify-center" style={{ background: 'var(--bg)' }}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-md w-full mx-4 text-center glass-card p-10"
+        className="max-w-md w-full mx-4 my-12 text-center glass-card p-10"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -26,26 +32,37 @@ export default function OrderSuccessPage() {
           <CheckCircle2 size={36} className="text-[var(--accent)]" />
         </motion.div>
 
-        <h1 className="text-3xl font-bold mb-3">Order Confirmed!</h1>
-        <p className="text-[var(--muted)] mb-2">
-          Thank you for your purchase from Mo&apos;s Yard.
-        </p>
+        <h1 className="text-3xl font-bold mb-3">Reserved for Pickup!</h1>
+        {ref && (
+          <p className="mb-2 text-xl font-bold tracking-widest text-[var(--accent)]">{ref}</p>
+        )}
         <p className="text-[var(--muted)] text-sm mb-8">
-          You'll receive a confirmation email shortly with your order details and tracking information.
+          Your supplies are set aside at the yard — pay when you pick up
+          (credit, debit, or e-transfer).
         </p>
 
         <div className="
-          bg-[var(--surface-2)] rounded-xl p-4 border border-[var(--border)] mb-8 text-left space-y-2
+          bg-[var(--surface-2)] rounded-xl p-4 border border-[var(--border)] mb-6 text-left space-y-3
         ">
-          <div className="flex justify-between text-sm">
-            <span className="text-[var(--muted)]">Expected Delivery</span>
-            <span className="font-medium">3–5 Business Days</span>
+          <div className="flex items-start gap-2.5 text-sm">
+            <MapPin size={15} className="mt-0.5 flex-shrink-0 text-[var(--accent)]" />
+            <span className="font-medium">{COMPANY.address.full}</span>
+          </div>
+          <div className="flex items-start gap-2.5 text-sm">
+            <Clock size={15} className="mt-0.5 flex-shrink-0 text-[var(--accent)]" />
+            <span className="text-[var(--muted)]">
+              Mon–Tue & Sat 12–4 · Wed–Fri 10–6 · Sun closed
+            </span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-[var(--muted)]">Support</span>
-            <span className="font-medium text-[var(--accent)]">hello@mosyard.com</span>
+            <span className="text-[var(--muted)]">Questions</span>
+            <a href={`mailto:${COMPANY.email}`} className="font-medium text-[var(--accent)]">{COMPANY.email}</a>
           </div>
         </div>
+
+        <p className="mb-8 text-left text-xs leading-relaxed text-[var(--muted)]">
+          <span className="font-semibold text-[var(--text)]">Returns:</span> {RETURN_POLICY}
+        </p>
 
         <div className="flex flex-col gap-3">
           <Link href="/shop" className="btn-primary w-full justify-center">
@@ -59,5 +76,13 @@ export default function OrderSuccessPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={null}>
+      <OrderSuccessContent />
+    </Suspense>
   );
 }

@@ -154,14 +154,14 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                   </span>
                 </div>
                 <p className="text-xs text-[var(--muted)]">
-                  Shipping and taxes calculated at checkout.
+                  Pickup only — GST added at reservation. Pay at the yard.
                 </p>
                 <Link
                   href="/shop/checkout"
                   onClick={onClose}
                   className="btn-primary w-full justify-center"
                 >
-                  Proceed to Checkout
+                  Reserve for Pickup
                 </Link>
                 <button
                   onClick={onClose}
