@@ -267,6 +267,32 @@ h1, h2, h3, h4, h5, h6 {
   background-clip: text;
 }
 
+/* ─── Hero motion floor ───────────────────────────────────────────────── */
+/* A slow Ken Burns pan on the poster image that sits BEHIND the hero video.
+   It runs on pure CSS, so the hero is never frozen even when the browser
+   refuses to autoplay the video (Low Power Mode, in-app webviews, missing
+   codecs, slow first load). When the video does play it fades in on top.
+   Disabled automatically under prefers-reduced-motion by the block above. */
+@keyframes hero-pan {
+  0%   { transform: scale(1.06) translate3d(0, 0, 0); }
+  50%  { transform: scale(1.14) translate3d(-1.5%, -1.2%, 0); }
+  100% { transform: scale(1.06) translate3d(0, 0, 0); }
+}
+
+.hero-motion-floor {
+  animation: hero-pan 32s ease-in-out infinite;
+  will-change: transform;
+}
+
+.hero-video {
+  opacity: 0;
+  transition: opacity 1200ms ease;
+}
+
+.hero-video[data-playing='true'] {
+  opacity: 1;
+}
+
 /* ─── Lenis smooth scroll ─────────────────────────────────────────────── */
 html.lenis,
 html.lenis body {

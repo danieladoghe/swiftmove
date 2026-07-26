@@ -1,22 +1,24 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Warehouse, Play, ArrowRight } from 'lucide-react';
 
-const TITLE_WORDS = ['Moving', 'Made', 'Affordable', '& Simple'];
+const TITLE_WORDS = ['Secure', 'Outdoor', 'Storage', 'for Contractors'];
 
 export function LandingHero() {
   const ref = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoPlaying, setVideoPlaying] = useState(false);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const videoY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.9], [1, 0]);
 
-  // Autoplay is blocked by Low Power Mode, data saver, and some in-app
-  // browsers. Retry playback whenever the platform gives us an opening —
-  // readiness, tab focus, the first user gesture — and resume if the
-  // browser pauses the loop, so the truck never sits frozen.
+  // The hero can never sit frozen: an animated poster "motion floor" is always
+  // panning behind the video (pure CSS — no autoplay policy, no codec, no JS).
+  // The <video> only fades in *once it is genuinely playing frames*, so if the
+  // browser blocks autoplay (Low Power Mode, in-app webviews, missing codecs,
+  // slow first load), the moving poster stays on screen instead of a dead still.
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
@@ -24,14 +26,26 @@ export function LandingHero() {
     v.muted = true;
     v.defaultMuted = true;
 
+    // `playing`/`timeupdate` are the only trustworthy signals that real frames
+    // are rendering — `play()` resolving is not enough (it can resolve then the
+    // platform silently pauses). Drive the fade-in off actual playback.
+    const markPlaying = () => {
+      if (!v.paused && v.currentTime > 0) setVideoPlaying(true);
+    };
+    const markStopped = () => setVideoPlaying(false);
+
     const tryPlay = () => {
-      if (document.hidden || !v.paused) return;
-      v.play().catch(() => { /* blocked — a later trigger will retry */ });
+      if (document.hidden) return;
+      const p = v.play();
+      if (p) p.then(markPlaying).catch(() => { /* blocked — a later trigger retries */ });
     };
 
     tryPlay();
+    v.addEventListener('playing', markPlaying);
+    v.addEventListener('timeupdate', markPlaying);
     v.addEventListener('canplay', tryPlay);
-    v.addEventListener('pause', tryPlay); // no controls exist, so any pause is the browser's
+    v.addEventListener('stalled', markStopped);
+    v.addEventListener('waiting', markStopped);
     document.addEventListener('visibilitychange', tryPlay);
     window.addEventListener('focus', tryPlay);
     // First-gesture fallback: platforms always allow play() after interaction.
@@ -39,8 +53,11 @@ export function LandingHero() {
     gestures.forEach((e) => window.addEventListener(e, tryPlay, { passive: true }));
 
     return () => {
+      v.removeEventListener('playing', markPlaying);
+      v.removeEventListener('timeupdate', markPlaying);
       v.removeEventListener('canplay', tryPlay);
-      v.removeEventListener('pause', tryPlay);
+      v.removeEventListener('stalled', markStopped);
+      v.removeEventListener('waiting', markStopped);
       document.removeEventListener('visibilitychange', tryPlay);
       window.removeEventListener('focus', tryPlay);
       gestures.forEach((e) => window.removeEventListener(e, tryPlay));
@@ -49,8 +66,14 @@ export function LandingHero() {
 
   return (
     <section ref={ref} className="relative flex h-[100vh] min-h-[700px] items-center justify-center overflow-hidden bg-[#0E1013]">
-      {/* Video background with scroll parallax */}
+      {/* Background layer with scroll parallax */}
       <motion.div style={{ y: videoY }} className="absolute inset-0">
+        {/* Motion floor: always-panning poster, visible until the video takes over. */}
+        <div
+          aria-hidden
+          className="hero-motion-floor absolute inset-0 bg-cover bg-[position:76%_center] md:bg-center"
+          style={{ backgroundImage: 'url(/hero-poster.jpg)' }}
+        />
         <video
           ref={videoRef}
           autoPlay
@@ -58,10 +81,10 @@ export function LandingHero() {
           loop
           playsInline
           preload="auto"
-          poster="/hero-poster.jpg"
           // The truck sits in the right of the 16:9 frame — bias the portrait
           // crop toward it so phones don't show only the warehouse door.
-          className="h-full w-full object-cover object-[76%_center] md:object-center"
+          className="hero-video absolute inset-0 h-full w-full object-cover object-[76%_center] md:object-center"
+          data-playing={videoPlaying ? 'true' : 'false'}
         >
           <source src="/hero.mp4" type="video/mp4" />
         </video>
@@ -83,7 +106,7 @@ export function LandingHero() {
           className="mb-6 flex items-center justify-center gap-2.5 text-xs font-semibold uppercase tracking-[0.3em] text-[#F5921E] sm:text-sm"
         >
           <Warehouse size={16} />
-          Storage &bull; Rentals &bull; Logistics
+          Contractor Storage &bull; U-Haul Rentals &bull; Moving Supplies
         </motion.p>
 
         <h1 className="mb-8 text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl lg:text-[88px]">
@@ -106,8 +129,9 @@ export function LandingHero() {
           transition={{ delay: 0.7, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="mx-auto mb-10 max-w-2xl text-lg font-light leading-relaxed text-white/80 md:text-xl"
         >
-          Secure outdoor storage, U-Haul rentals, moving supplies, and freight
-          support — all in one yard in Okotoks, Alberta.
+          Fenced, gated yard space for your trailers, equipment, and materials —
+          plus U-Haul truck &amp; trailer rentals and moving supplies, all in one
+          yard in Okotoks, Alberta.
         </motion.p>
 
         <motion.div

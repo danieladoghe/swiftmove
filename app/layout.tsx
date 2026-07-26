@@ -13,9 +13,9 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.mosyard.ca'),
-  title: "Mo's Yard | Outdoor Storage, U-Haul Rentals & Logistics in Okotoks",
+  title: "Mo's Yard | Contractor Outdoor Storage, U-Haul Rentals & Moving Supplies in Okotoks",
   description:
-    "Secure outdoor storage yards, U-Haul rentals, moving supplies, and freight & logistics support at 247 Don Seaman Way, Okotoks — serving High River, Foothills County, and South Calgary. Reserve your space online.",
+    "Secure, fenced outdoor storage for contractors and businesses — plus U-Haul truck & trailer rentals, moving supplies, and freight support at 247 Don Seaman Way, Okotoks. Serving High River, Foothills County, and South Calgary. Reserve your yard online.",
   keywords: ['outdoor storage Okotoks', 'contractor yard storage', 'U-Haul Okotoks', 'freight logistics Foothills', 'moving supplies Okotoks', 'storage High River', 'yard storage Alberta'],
   openGraph: {
     title: "Mo's Yard | Storage, Rentals & Logistics — Okotoks, AB",
