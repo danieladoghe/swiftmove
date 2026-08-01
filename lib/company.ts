@@ -14,11 +14,11 @@ export const COMPANY = {
   domain: 'https://www.mosyard.ca',
   /** Google Business Profile (maps search link until the short URL is supplied). */
   googleUrl: "https://www.google.com/maps/search/?api=1&query=Mo's+Yard+Okotoks+AB",
-  /** Social profiles not created yet — keep as TBD placeholders. */
+  /** Instagram/X not created yet — keep as TBD placeholders. */
   socials: [
     { label: 'Google', href: "https://www.google.com/maps/search/?api=1&query=Mo's+Yard+Okotoks+AB" },
     { label: 'Instagram', href: '#' },
-    { label: 'Facebook', href: '#' },
+    { label: 'Facebook', href: 'https://www.facebook.com/share/1BZ4r4SkDm/' },
     { label: 'X', href: '#' },
   ],
 } as const;

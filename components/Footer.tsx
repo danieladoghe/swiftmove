@@ -26,7 +26,7 @@ const footerLinks = {
 };
 
 const socials = [
-  { icon: Facebook, href: '#', label: 'Facebook' },
+  { icon: Facebook, href: 'https://www.facebook.com/share/1BZ4r4SkDm/', label: 'Facebook' },
   { icon: Instagram, href: '#', label: 'Instagram' },
   { icon: Twitter, href: '#', label: 'Twitter' },
   { icon: Linkedin, href: '#', label: 'LinkedIn' },
@@ -109,6 +109,7 @@ export function Footer() {
                 key={label}
                 href={href}
                 aria-label={label}
+                {...(href !== '#' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 className="
                   w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--surface-2)]
                   flex items-center justify-center text-[var(--muted)]
