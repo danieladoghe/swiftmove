@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
 import { YARD_SPACES, GST_RATE } from '@/lib/booking';
+import { persistAndNotify } from '@/lib/submissions';
 
 interface BookingBody {
   spaceId: string;
@@ -117,29 +118,61 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Name and a valid email are required.' }, { status: 400 });
     }
 
-    const logBase = {
-      space: `${space.name} (${space.dims})`,
-      moveIn: body.moveIn,
-      contact,
-      notes: body.notes,
-      receivedAt: new Date().toISOString(),
-    };
-
     // With Square configured, generate + email the real invoice.
+    let reference = `MY-${randomUUID().slice(0, 6).toUpperCase()}`;
+    let invoiced = false;
+    let invoiceUrl: string | null = null;
     if (process.env.SQUARE_ACCESS_TOKEN) {
       try {
-        const { reference, invoiceUrl } = await createSquareInvoice(body, space);
-        console.log("[Mo's Yard] Reservation invoiced:", { reference, invoiceUrl, ...logBase });
-        return NextResponse.json({ success: true, reference, invoiced: true, invoiceUrl });
+        const result = await createSquareInvoice(body, space);
+        reference = result.reference;
+        invoiceUrl = result.invoiceUrl;
+        invoiced = true;
       } catch (err) {
         // Never lose the reservation because invoicing hiccuped.
         console.error("[Mo's Yard] Square invoicing failed, falling back to manual:", err);
       }
     }
 
-    const reference = `MY-${randomUUID().slice(0, 6).toUpperCase()}`;
-    console.log("[Mo's Yard] Reservation received (manual invoicing):", { reference, ...logBase });
-    return NextResponse.json({ success: true, reference, invoiced: false });
+    // Log to the admin database + email info@mosyard.ca (both best-effort).
+    await persistAndNotify(
+      {
+        reference,
+        type: 'booking',
+        name: contact.name,
+        email: contact.email,
+        phone: contact.phone,
+        company: contact.company,
+        summary: `${space.name} (${space.dims})${body.moveIn ? ` — move-in ${body.moveIn}` : ''}`,
+        details: {
+          space: `${space.name} (${space.dims})`,
+          moveIn: body.moveIn,
+          notes: body.notes,
+          invoiced,
+          invoiceUrl,
+        },
+      },
+      {
+        emailHeading: `New yard reservation — ${space.name}`,
+        emailIntro: invoiced
+          ? 'A new storage reservation came in; a Square invoice was emailed to the customer.'
+          : 'A new storage reservation came in (manual invoicing — Square not configured or errored).',
+        replyTo: contact.email,
+        emailRows: [
+          ['Space', `${space.name} (${space.dims})`],
+          ['Customer', contact.name],
+          ['Company', contact.company],
+          ['Email', contact.email],
+          ['Phone', contact.phone],
+          ['Move-in', body.moveIn],
+          ['Invoiced', invoiced ? 'Yes (Square)' : 'No — needs manual invoice'],
+          ['Invoice link', invoiceUrl],
+          ['Notes', body.notes],
+        ],
+      }
+    );
+
+    return NextResponse.json({ success: true, reference, invoiced, invoiceUrl });
   } catch (error) {
     console.error("[Mo's Yard] Booking error:", error);
     return NextResponse.json({ success: false, error: 'Failed to submit reservation. Please try again.' }, { status: 500 });

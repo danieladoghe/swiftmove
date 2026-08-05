@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
+import { persistAndNotify } from '@/lib/submissions';
 
 interface ContactBody {
   firstName: string;
@@ -35,41 +37,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ── Email sending integration ──────────────────────────────────────────
-    // Replace this section with your preferred email provider:
-    // - Resend:    https://resend.com/docs
-    // - SendGrid:  https://docs.sendgrid.com
-    // - Nodemailer with SMTP
-    //
-    // Example with Resend:
-    // const resend = new Resend(process.env.RESEND_API_KEY);
-    // await resend.emails.send({
-    //   from: 'quotes@mosyard.ca',
-    //   to: 'info@mosyard.ca',
-    //   subject: `New Quote Request from ${firstName} ${lastName}`,
-    //   html: `...`,
-    // });
+    const reference = `EN-${randomUUID().slice(0, 6).toUpperCase()}`;
+    const fullName = `${firstName} ${lastName}`.trim();
 
-    // For now, log the quote request
-    console.log("[Mo's Yard] New quote request:", {
-      name: `${firstName} ${lastName}`,
-      email,
-      phone: body.phone,
-      moveType,
-      rooms: body.rooms,
-      from: fromAddress,
-      to: toAddress,
-      date: body.moveDate,
-      message: body.message,
-      receivedAt: new Date().toISOString(),
-    });
-
-    // TODO: Save to database (e.g., Prisma, Supabase, MongoDB)
-    // TODO: Send confirmation email to customer
-    // TODO: Send notification email to team
+    // Log to the admin database + email info@mosyard.ca (both best-effort).
+    await persistAndNotify(
+      {
+        reference,
+        type: 'enquiry',
+        name: fullName,
+        email,
+        phone: body.phone,
+        summary: `${moveType} — ${fromAddress} → ${toAddress}`,
+        details: {
+          moveType,
+          rooms: body.rooms,
+          fromAddress,
+          toAddress,
+          moveDate: body.moveDate,
+          message: body.message,
+        },
+      },
+      {
+        emailHeading: `New enquiry — ${fullName}`,
+        emailIntro: 'A new quote/enquiry came in through mosyard.ca.',
+        replyTo: email,
+        emailRows: [
+          ['Name', fullName],
+          ['Email', email],
+          ['Phone', body.phone],
+          ['Move type', moveType],
+          ['Rooms', body.rooms],
+          ['From', fromAddress],
+          ['To', toAddress],
+          ['Move date', body.moveDate],
+          ['Message', body.message],
+        ],
+      }
+    );
 
     return NextResponse.json({
       success: true,
+      reference,
       message: 'Quote request received. We will be in touch shortly!',
     });
 

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
-import { COMPANY, HOURS } from '@/lib/company';
+import { COMPANY, HOURS, HOURS_STATUS } from '@/lib/company';
 
 const details = [
   { icon: Mail, label: COMPANY.email, href: `mailto:${COMPANY.email}` },
@@ -66,7 +66,7 @@ export function ContactSection() {
           </h2>
           <p className="mb-10 max-w-md text-lg font-light leading-relaxed text-[var(--muted)]">
             Questions about a space, a crew, or a load that has to be somewhere
-            by Friday? A real person answers — usually Moyo.
+            by Friday? A real person answers — usually one of our crew.
           </p>
           <ul className="mb-10 space-y-6">
             {details.map(({ icon: Icon, label, href }) => {
@@ -93,14 +93,21 @@ export function ContactSection() {
             <p className="mb-3 flex items-center gap-2 font-bold">
               <Clock size={16} className="text-[var(--accent)]" /> Office hours
             </p>
-            <div className="space-y-1.5 text-sm text-[var(--muted)]">
-              {HOURS.map(({ day, hours }) => (
-                <p key={day} className="flex justify-between gap-6">
-                  <span>{day}</span>
-                  <span className={hours === 'Closed' ? '' : 'font-medium text-[var(--text)]'}>{hours}</span>
-                </p>
-              ))}
-            </div>
+            {HOURS_STATUS.launched ? (
+              <div className="space-y-1.5 text-sm text-[var(--muted)]">
+                {HOURS.map(({ day, hours }) => (
+                  <p key={day} className="flex justify-between gap-6">
+                    <span>{day}</span>
+                    <span className={hours === 'Closed' ? '' : 'font-medium text-[var(--text)]'}>{hours}</span>
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <div className="text-sm">
+                <p className="text-lg font-bold text-[var(--accent-dark)]">{HOURS_STATUS.comingSoon}</p>
+                <p className="mt-1 text-[var(--muted)]">{HOURS_STATUS.comingSoonNote}</p>
+              </div>
+            )}
             <p className="mt-3 text-xs font-semibold text-[var(--accent-dark)]">
               Storage customers have 24/7 gated access.
             </p>

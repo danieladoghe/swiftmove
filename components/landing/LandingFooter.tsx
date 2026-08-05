@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { COMPANY, HOURS, UHAUL_URL } from '@/lib/company';
+import { COMPANY, HOURS, HOURS_STATUS, UHAUL_URL } from '@/lib/company';
 
 const explore = [
   { label: 'The Yard', href: '#yard' },
@@ -113,11 +113,15 @@ export function LandingFooter() {
             </address>
             <div className="space-y-1 text-xs leading-relaxed text-white/50">
               <p className="mb-1.5 font-semibold uppercase tracking-wider text-white/40">Office hours</p>
-              {HOURS.map(({ day, hours }) => (
-                <p key={day} className="flex justify-between gap-4">
-                  <span>{day}</span><span>{hours}</span>
-                </p>
-              ))}
+              {HOURS_STATUS.launched ? (
+                HOURS.map(({ day, hours }) => (
+                  <p key={day} className="flex justify-between gap-4">
+                    <span>{day}</span><span>{hours}</span>
+                  </p>
+                ))
+              ) : (
+                <p className="font-semibold text-[#F5921E]/90">{HOURS_STATUS.comingSoon}</p>
+              )}
               <p className="pt-1.5 text-[#F5921E]/80">Storage customers: 24/7 gated access</p>
             </div>
           </div>

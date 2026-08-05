@@ -44,7 +44,7 @@ export function ProductStrip() {
               The Shop
             </p>
             <h2 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">
-              Pack Like Our Crews Do
+              Everything You Need to Pack &amp; Move
             </h2>
             <p className="text-lg font-light leading-relaxed text-[var(--muted)]">
               Boxes, blankets, tape, and gear — reserve online, then pick up at

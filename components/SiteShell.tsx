@@ -10,7 +10,8 @@ import { Footer } from './Footer';
  */
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const immersive = pathname === '/' || pathname?.startsWith('/story');
+  const immersive =
+    pathname === '/' || pathname?.startsWith('/story') || pathname?.startsWith('/admin');
 
   if (immersive) {
     return <>{children}</>;

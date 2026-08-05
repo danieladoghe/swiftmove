@@ -1,0 +1,96 @@
+// Transactional email for Mo's Yard, via Resend's REST API (no SDK dependency —
+// just fetch, so it runs anywhere). Every customer submission triggers a
+// notification to the yard's inbox.
+//
+// Best-effort by design: if RESEND_API_KEY is missing or Resend errors, we log
+// and return { sent: false } instead of throwing, so a customer's order or
+// enquiry is never lost because email hiccupped.
+//
+// Required env to switch it on (set in Netlify):
+//   RESEND_API_KEY   your Resend API key
+//   EMAIL_FROM       verified sender, e.g. "Mo's Yard <notifications@mosyard.ca>"
+//                    (defaults to Resend's shared onboarding@resend.dev for testing)
+//   EMAIL_TO         where notifications land (defaults to info@mosyard.ca)
+
+export const NOTIFY_TO = process.env.EMAIL_TO || 'info@mosyard.ca';
+const FROM = process.env.EMAIL_FROM || "Mo's Yard <onboarding@resend.dev>";
+
+export interface SendResult {
+  sent: boolean;
+  error?: string;
+}
+
+interface SendArgs {
+  subject: string;
+  html: string;
+  replyTo?: string;
+}
+
+export async function sendNotification({ subject, html, replyTo }: SendArgs): Promise<SendResult> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn('[email] RESEND_API_KEY not set — skipping notification:', subject);
+    return { sent: false, error: 'not_configured' };
+  }
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: FROM,
+        to: [NOTIFY_TO],
+        subject,
+        html,
+        ...(replyTo ? { reply_to: replyTo } : {}),
+      }),
+    });
+
+    if (!res.ok) {
+      const detail = await res.text().catch(() => '');
+      console.error('[email] Resend responded', res.status, detail);
+      return { sent: false, error: `resend_${res.status}` };
+    }
+    return { sent: true };
+  } catch (err) {
+    console.error('[email] send failed', err);
+    return { sent: false, error: 'exception' };
+  }
+}
+
+function esc(v: unknown): string {
+  return String(v ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+/** Build a simple, readable HTML notification email from labelled rows. */
+export function notificationHtml(opts: {
+  heading: string;
+  intro?: string;
+  reference?: string;
+  rows: [label: string, value: unknown][];
+}): string {
+  const rows = opts.rows
+    .filter(([, v]) => v !== undefined && v !== null && v !== '')
+    .map(
+      ([label, value]) =>
+        `<tr>
+           <td style="padding:6px 14px 6px 0;color:#5f636b;white-space:nowrap;vertical-align:top;">${esc(label)}</td>
+           <td style="padding:6px 0;color:#17191d;font-weight:600;">${esc(value)}</td>
+         </tr>`
+    )
+    .join('');
+
+  return `<div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;">
+    <h2 style="margin:0 0 4px;color:#17191d;">${esc(opts.heading)}</h2>
+    ${opts.reference ? `<p style="margin:0 0 12px;color:#d97b0c;font-weight:700;">Ref ${esc(opts.reference)}</p>` : ''}
+    ${opts.intro ? `<p style="margin:0 0 16px;color:#5f636b;">${esc(opts.intro)}</p>` : ''}
+    <table style="border-collapse:collapse;width:100%;font-size:14px;">${rows}</table>
+    <p style="margin:20px 0 0;font-size:12px;color:#9aa0a8;">Sent automatically from mosyard.ca</p>
+  </div>`;
+}

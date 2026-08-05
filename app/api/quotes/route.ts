@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
+import { persistAndNotify } from '@/lib/submissions';
 
 interface QuoteBody {
   name: string;
@@ -25,9 +26,41 @@ export async function POST(request: NextRequest) {
 
     const reference = `FQ-${randomUUID().slice(0, 6).toUpperCase()}`;
 
-    // TODO: Email this to info@mosyard.ca once a transactional email provider
-    // (e.g. Resend) is configured.
-    console.log("[Mo's Yard] Freight quote request:", { reference, ...body, receivedAt: new Date().toISOString() });
+    // Log to the admin database + email info@mosyard.ca (both best-effort).
+    await persistAndNotify(
+      {
+        reference,
+        type: 'quote',
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        company: body.company,
+        summary: `${body.service}${body.pickup ? ` — ${body.pickup} → ${body.delivery ?? ''}` : ''}`,
+        details: {
+          service: body.service,
+          pickup: body.pickup,
+          delivery: body.delivery,
+          date: body.date,
+          description: body.description,
+        },
+      },
+      {
+        emailHeading: `New freight quote — ${body.name}`,
+        emailIntro: 'A new freight/logistics quote request came in through mosyard.ca.',
+        replyTo: body.email,
+        emailRows: [
+          ['Name', body.name],
+          ['Company', body.company],
+          ['Email', body.email],
+          ['Phone', body.phone],
+          ['Service', body.service],
+          ['Pickup', body.pickup],
+          ['Delivery', body.delivery],
+          ['Date', body.date],
+          ['Description', body.description],
+        ],
+      }
+    );
 
     return NextResponse.json({ success: true, reference });
   } catch (error) {

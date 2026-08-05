@@ -23,6 +23,17 @@ export const COMPANY = {
   ],
 } as const;
 
+/**
+ * Until the yard officially launches, show "Coming Soon" instead of the weekly
+ * hours table. Flip `launched` to true (and the real HOURS below take over)
+ * when doors open.
+ */
+export const HOURS_STATUS = {
+  launched: false,
+  comingSoon: 'Coming Soon',
+  comingSoonNote: 'Opening hours announced at launch.',
+} as const;
+
 export const HOURS: { day: string; hours: string }[] = [
   { day: 'Monday', hours: '12:00 pm – 4:00 pm' },
   { day: 'Tuesday', hours: '12:00 pm – 4:00 pm' },
