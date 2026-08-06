@@ -135,34 +135,41 @@ export async function recordSubmission(
   }
 }
 
-/** null return = database not configured (distinct from an empty list). */
-export async function listSubmissions(opts: {
-  type?: string;
-  status?: string;
-} = {}): Promise<SubmissionRow[] | null> {
-  const sql = getSql();
-  if (!sql) return null;
-  await ready(sql);
-  const type = opts.type && opts.type !== 'all' ? opts.type : null;
-  const status = opts.status && opts.status !== 'all' ? opts.status : null;
-  const rows = await sql<SubmissionRow[]>`
-    SELECT * FROM submissions
-    WHERE (${type}::text IS NULL OR type = ${type})
-      AND (${status}::text IS NULL OR status = ${status})
-    ORDER BY created_at DESC
-    LIMIT 500`;
-  return rows;
-}
+export type DashboardData =
+  | { state: 'not_configured' }
+  | { state: 'error'; message: string }
+  | { state: 'ok'; rows: SubmissionRow[]; counts: Record<string, number> };
 
-export async function countsByStatus(): Promise<Record<string, number> | null> {
+/**
+ * Fetch everything the dashboard needs in one resilient call. A missing
+ * DATABASE_URL returns 'not_configured'; a connection/query failure returns
+ * 'error' with the message — so a bad connection string shows a helpful notice
+ * instead of throwing a 500 on the admin page.
+ */
+export async function getDashboardData(
+  opts: { type?: string; status?: string } = {}
+): Promise<DashboardData> {
   const sql = getSql();
-  if (!sql) return null;
-  await ready(sql);
-  const rows = await sql<{ status: string; n: string }[]>`
-    SELECT status, COUNT(*)::text AS n FROM submissions GROUP BY status`;
-  const out: Record<string, number> = {};
-  for (const r of rows) out[r.status] = Number(r.n);
-  return out;
+  if (!sql) return { state: 'not_configured' };
+  try {
+    await ready(sql);
+    const type = opts.type && opts.type !== 'all' ? opts.type : null;
+    const status = opts.status && opts.status !== 'all' ? opts.status : null;
+    const rows = await sql<SubmissionRow[]>`
+      SELECT * FROM submissions
+      WHERE (${type}::text IS NULL OR type = ${type})
+        AND (${status}::text IS NULL OR status = ${status})
+      ORDER BY created_at DESC
+      LIMIT 500`;
+    const countRows = await sql<{ status: string; n: string }[]>`
+      SELECT status, COUNT(*)::text AS n FROM submissions GROUP BY status`;
+    const counts: Record<string, number> = {};
+    for (const r of countRows) counts[r.status] = Number(r.n);
+    return { state: 'ok', rows: [...rows], counts };
+  } catch (err) {
+    console.error('[db] getDashboardData failed', err);
+    return { state: 'error', message: (err as Error)?.message || 'Database connection failed.' };
+  }
 }
 
 export async function updateStatus(

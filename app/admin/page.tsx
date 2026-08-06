@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { listSubmissions, countsByStatus, STATUSES, type SubmissionRow } from '@/lib/db';
+import { getDashboardData, STATUSES, type SubmissionRow } from '@/lib/db';
 import { StatusSelect, LogoutButton } from '@/components/admin/AdminControls';
 
 export const dynamic = 'force-dynamic';
@@ -56,10 +56,11 @@ export default async function AdminDashboard({
   const type = sp.type || 'all';
   const status = sp.status || 'all';
 
-  const rows = await listSubmissions({ type, status });
-  const counts = await countsByStatus();
+  const data = await getDashboardData({ type, status });
+  const rows = data.state === 'ok' ? data.rows : [];
+  const counts = data.state === 'ok' ? data.counts : null;
 
-  const configured = rows !== null;
+  const configured = data.state === 'ok';
 
   const buildHref = (next: { type?: string; status?: string }) => {
     const t = next.type ?? type;
@@ -90,8 +91,10 @@ export default async function AdminDashboard({
           <LogoutButton />
         </div>
 
-        {!configured ? (
+        {data.state === 'not_configured' ? (
           <SetupNotice />
+        ) : data.state === 'error' ? (
+          <ErrorNotice message={data.message} />
         ) : (
           <>
             {/* Status summary */}
@@ -215,6 +218,26 @@ function SetupNotice() {
       </p>
       <p style={{ margin: 0, color: c.muted, fontSize: 14 }}>
         Also required for this page: <code style={code}>ADMIN_PASSWORD</code> and <code style={code}>AUTH_SECRET</code> (you already have them, since you signed in). Email needs <code style={code}>RESEND_API_KEY</code>.
+      </p>
+    </div>
+  );
+}
+
+function ErrorNotice({ message }: { message: string }) {
+  return (
+    <div style={{ marginTop: 26, border: '1px solid #7a2e2e', borderRadius: 14, background: '#221618', padding: 22, lineHeight: 1.6 }}>
+      <h2 style={{ margin: '0 0 8px', fontSize: 17, color: '#ff8f8f' }}>Couldn&apos;t connect to the database</h2>
+      <p style={{ margin: '0 0 12px', color: c.muted, fontSize: 14 }}>
+        <code style={code}>DATABASE_URL</code> is set, but the connection failed. This is almost always the
+        connection string itself. Check, in Supabase → <b>Connect</b>:
+      </p>
+      <ul style={{ margin: '0 0 12px', paddingLeft: 18, color: c.muted, fontSize: 14 }}>
+        <li>Use the <b>Transaction pooler</b> string (host ends in <code style={code}>pooler.supabase.com</code>, port <code style={code}>6543</code>).</li>
+        <li>Replace <code style={code}>[YOUR-PASSWORD]</code> with your real database password (Settings → Database → reset it if unsure).</li>
+        <li>No spaces or line breaks in the value; keep <code style={code}>:6543/postgres</code> at the end.</li>
+      </ul>
+      <p style={{ margin: 0, color: '#9aa0a8', fontSize: 12.5 }}>
+        Server said: <code style={{ ...code, color: '#ffb4b4' }}>{message}</code>
       </p>
     </div>
   );
