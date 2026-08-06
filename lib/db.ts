@@ -68,7 +68,7 @@ let schemaReady: Promise<void> | null = null;
 
 /** Returns a lazily-created client, or null when no database is configured. */
 export function getSql(): Sql | null {
-  const url = env('DATABASE_URL');
+  const url = env('DATABASE_URL')?.trim();
   if (!url) return null;
   if (!client) {
     client = postgres(url, {
@@ -116,9 +116,10 @@ function ready(sql: Sql): Promise<void> {
 export async function recordSubmission(
   input: SubmissionInput
 ): Promise<{ saved: boolean; id?: string; error?: string }> {
-  const sql = getSql();
-  if (!sql) return { saved: false, error: 'no_database' };
+  if (!env('DATABASE_URL')) return { saved: false, error: 'no_database' };
   try {
+    const sql = getSql();
+    if (!sql) return { saved: false, error: 'no_database' };
     await ready(sql);
     const id = randomUUID();
     await sql`
@@ -149,9 +150,10 @@ export type DashboardData =
 export async function getDashboardData(
   opts: { type?: string; status?: string } = {}
 ): Promise<DashboardData> {
-  const sql = getSql();
-  if (!sql) return { state: 'not_configured' };
+  if (!env('DATABASE_URL')) return { state: 'not_configured' };
   try {
+    const sql = getSql();
+    if (!sql) return { state: 'not_configured' };
     await ready(sql);
     const type = opts.type && opts.type !== 'all' ? opts.type : null;
     const status = opts.status && opts.status !== 'all' ? opts.status : null;
@@ -176,9 +178,10 @@ export async function updateStatus(
   id: string,
   status: SubmissionStatus
 ): Promise<{ ok: boolean; error?: string }> {
-  const sql = getSql();
-  if (!sql) return { ok: false, error: 'no_database' };
+  if (!env('DATABASE_URL')) return { ok: false, error: 'no_database' };
   try {
+    const sql = getSql();
+    if (!sql) return { ok: false, error: 'no_database' };
     await ready(sql);
     const rows = await sql`
       UPDATE submissions SET status = ${status}, updated_at = now()
