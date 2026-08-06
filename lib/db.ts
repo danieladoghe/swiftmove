@@ -67,9 +67,38 @@ let client: Sql | null = null;
 let schemaReady: Promise<void> | null = null;
 
 /** Returns a lazily-created client, or null when no database is configured. */
+/** Clean up the most common copy-paste mistakes in a pasted connection string. */
+export function sanitizeDbUrl(raw: string): string {
+  let v = raw.trim();
+  // stray "KEY=" prefix from pasting a whole .env line
+  v = v.replace(/^(MOS_)?DATABASE_URL\s*=\s*/i, '');
+  // one layer of surrounding quotes
+  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+    v = v.slice(1, -1);
+  }
+  // a valid connection URL never contains raw whitespace/newlines
+  v = v.replace(/\s+/g, '');
+  return v;
+}
+
+/** Safe (no-password) description of what's wrong with the URL's shape. */
+export function describeDbUrlShape(raw: string): string {
+  const v = sanitizeDbUrl(raw);
+  return [
+    /^postgres(ql)?:\/\//i.test(v) ? 'scheme ✓' : "does NOT start with postgresql:// ✗",
+    /["']/.test(raw) ? 'has quotes ✗' : null,
+    /\s/.test(raw.trim()) ? 'has spaces/newlines ✗' : null,
+    /pooler\.supabase\.com/i.test(v) ? 'pooler host ✓' : 'host is not *.pooler.supabase.com ✗',
+    /:6543(\/|$)/.test(v) ? 'port 6543 ✓' : 'not port 6543 ✗ (use the Transaction pooler)',
+  ]
+    .filter(Boolean)
+    .join(' · ');
+}
+
 export function getSql(): Sql | null {
-  const url = env('DATABASE_URL')?.trim();
-  if (!url) return null;
+  const raw = env('DATABASE_URL');
+  if (!raw || raw.trim() === '') return null;
+  const url = sanitizeDbUrl(raw);
   if (!client) {
     client = postgres(url, {
       ssl: env('DATABASE_SSL') === 'disable' ? false : 'require',
@@ -170,7 +199,10 @@ export async function getDashboardData(
     return { state: 'ok', rows: [...rows], counts };
   } catch (err) {
     console.error('[db] getDashboardData failed', err);
-    return { state: 'error', message: (err as Error)?.message || 'Database connection failed.' };
+    const base = (err as Error)?.message || 'Database connection failed.';
+    const raw = env('DATABASE_URL');
+    const shape = raw ? describeDbUrlShape(raw) : '';
+    return { state: 'error', message: shape ? `${base}  —  value check: ${shape}` : base };
   }
 }
 
