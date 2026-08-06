@@ -23,15 +23,17 @@ interface SendArgs {
   subject: string;
   html: string;
   replyTo?: string;
+  /** Override recipient. Defaults to the yard inbox (EMAIL_TO / info@mosyard.ca). */
+  to?: string;
 }
 
-export async function sendNotification({ subject, html, replyTo }: SendArgs): Promise<SendResult> {
+export async function sendNotification({ subject, html, replyTo, to }: SendArgs): Promise<SendResult> {
   const apiKey = env('RESEND_API_KEY');
   if (!apiKey) {
-    console.warn('[email] RESEND_API_KEY not set — skipping notification:', subject);
+    console.warn('[email] RESEND_API_KEY not set — skipping email:', subject);
     return { sent: false, error: 'not_configured' };
   }
-  const to = env('EMAIL_TO') || 'info@mosyard.ca';
+  const recipient = to || env('EMAIL_TO') || 'info@mosyard.ca';
   const from = env('EMAIL_FROM') || "Mo's Yard <onboarding@resend.dev>";
 
   try {
@@ -43,7 +45,7 @@ export async function sendNotification({ subject, html, replyTo }: SendArgs): Pr
       },
       body: JSON.stringify({
         from,
-        to: [to],
+        to: [recipient],
         subject,
         html,
         ...(replyTo ? { reply_to: replyTo } : {}),
