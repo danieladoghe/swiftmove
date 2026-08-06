@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ADMIN_COOKIE, SESSION_MAX_AGE, createSession } from '@/lib/admin-auth';
+import { env } from '@/lib/env';
 
 export async function POST(req: NextRequest) {
-  const password = process.env.ADMIN_PASSWORD;
-  const secret = process.env.AUTH_SECRET;
-  const expectedUser = process.env.ADMIN_USERNAME || 'admin';
+  const password = env('ADMIN_PASSWORD');
+  const secret = env('AUTH_SECRET');
+  const expectedUser = env('ADMIN_USERNAME') || 'admin';
 
   if (!password || !secret) {
     return NextResponse.json(

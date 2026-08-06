@@ -12,8 +12,7 @@
 //                    (defaults to Resend's shared onboarding@resend.dev for testing)
 //   EMAIL_TO         where notifications land (defaults to info@mosyard.ca)
 
-export const NOTIFY_TO = process.env.EMAIL_TO || 'info@mosyard.ca';
-const FROM = process.env.EMAIL_FROM || "Mo's Yard <onboarding@resend.dev>";
+import { env } from './env';
 
 export interface SendResult {
   sent: boolean;
@@ -27,11 +26,13 @@ interface SendArgs {
 }
 
 export async function sendNotification({ subject, html, replyTo }: SendArgs): Promise<SendResult> {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = env('RESEND_API_KEY');
   if (!apiKey) {
     console.warn('[email] RESEND_API_KEY not set — skipping notification:', subject);
     return { sent: false, error: 'not_configured' };
   }
+  const to = env('EMAIL_TO') || 'info@mosyard.ca';
+  const from = env('EMAIL_FROM') || "Mo's Yard <onboarding@resend.dev>";
 
   try {
     const res = await fetch('https://api.resend.com/emails', {
@@ -41,8 +42,8 @@ export async function sendNotification({ subject, html, replyTo }: SendArgs): Pr
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: FROM,
-        to: [NOTIFY_TO],
+        from,
+        to: [to],
         subject,
         html,
         ...(replyTo ? { reply_to: replyTo } : {}),

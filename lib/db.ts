@@ -11,6 +11,7 @@
 
 import postgres from 'postgres';
 import { randomUUID } from 'crypto';
+import { env } from './env';
 
 export type SubmissionType = 'enquiry' | 'booking' | 'order' | 'quote';
 export type SubmissionStatus =
@@ -67,10 +68,11 @@ let schemaReady: Promise<void> | null = null;
 
 /** Returns a lazily-created client, or null when no database is configured. */
 export function getSql(): Sql | null {
-  if (!process.env.DATABASE_URL) return null;
+  const url = env('DATABASE_URL');
+  if (!url) return null;
   if (!client) {
-    client = postgres(process.env.DATABASE_URL, {
-      ssl: process.env.DATABASE_SSL === 'disable' ? false : 'require',
+    client = postgres(url, {
+      ssl: env('DATABASE_SSL') === 'disable' ? false : 'require',
       max: 1, // serverless: keep the pool tiny
       idle_timeout: 20,
       connect_timeout: 15,

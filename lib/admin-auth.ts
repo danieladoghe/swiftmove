@@ -11,6 +11,8 @@
 //   AUTH_SECRET      a long random string used to sign sessions
 //   ADMIN_USERNAME   optional, defaults to "admin"
 
+import { env } from './env';
+
 export const ADMIN_COOKIE = 'mosyard_admin';
 const SESSION_TTL_SECONDS = 60 * 60 * 12; // 12 hours
 
@@ -49,7 +51,7 @@ function timingSafeEqual(a: Uint8Array, b: Uint8Array): boolean {
 
 /** Create a signed session token, or null if auth isn't configured. */
 export async function createSession(username: string): Promise<string | null> {
-  const secret = process.env.AUTH_SECRET;
+  const secret = env('AUTH_SECRET');
   if (!secret) return null;
   const exp = Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS;
   const payload = toBase64Url(new TextEncoder().encode(JSON.stringify({ u: username, exp })));
@@ -59,7 +61,7 @@ export async function createSession(username: string): Promise<string | null> {
 
 /** Verify a session token; returns the username or null. */
 export async function verifySession(token: string | undefined): Promise<string | null> {
-  const secret = process.env.AUTH_SECRET;
+  const secret = env('AUTH_SECRET');
   if (!secret || !token) return null;
   const dot = token.indexOf('.');
   if (dot < 0) return null;
