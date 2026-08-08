@@ -1,66 +1,111 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, MapPin, Clock, Check, ShoppingBag, Store, Truck } from 'lucide-react';
+import { ArrowLeft, MapPin, Clock, Check, ShoppingBag, Store, Truck, CreditCard, Wallet } from 'lucide-react';
 import { useCart } from '@/components/CartContext';
 import { formatPrice } from '@/lib/cart';
 import { GST_RATE, ACCEPTED_PAYMENTS } from '@/lib/booking';
 import { COMPANY, RETURN_POLICY, DELIVERY_NOTE } from '@/lib/company';
+import { SquareCard } from '@/components/shop/SquareCard';
 
 type Fulfillment = 'pickup' | 'delivery';
+type PayMethod = 'card' | 'onsite';
+type CardTokenizer = {
+  tokenize: () => Promise<{ status: string; token?: string; errors?: { message: string }[] }>;
+};
+
+const SQUARE_APP_ID = process.env.NEXT_PUBLIC_SQUARE_APP_ID;
+const SQUARE_LOCATION_ID = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
+const CARD_ENABLED = !!SQUARE_APP_ID && !!SQUARE_LOCATION_ID;
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, subtotal, clearCart } = useCart();
   const [method, setMethod] = useState<Fulfillment>('pickup');
+  const [pay, setPay] = useState<PayMethod>(CARD_ENABLED ? 'card' : 'onsite');
   const [contact, setContact] = useState({ name: '', email: '', phone: '' });
   const [address, setAddress] = useState({ street: '', city: '', postal: '' });
   const [notes, setNotes] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+  const cardRef = useRef<CardTokenizer | null>(null);
 
   const gst = Math.round(subtotal * GST_RATE);
   const total = subtotal + gst;
+  const payByCard = CARD_ENABLED && pay === 'card';
   const valid =
     contact.name.trim().length > 1 &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email) &&
     (method === 'pickup' || (address.street.trim().length > 3 && address.city.trim().length > 1));
 
+  const orderPayload = () => ({
+    contact,
+    notes,
+    fulfillment: method,
+    address: method === 'delivery' ? address : undefined,
+    items: items.map((i) => ({
+      id: i.product.id,
+      name: i.product.name,
+      option: i.selectedOption,
+      quantity: i.quantity,
+      price: i.product.price,
+    })),
+  });
+
+  const goToSuccess = (reference: string, paid: boolean) =>
+    router.push(`/shop/order-success?ref=${encodeURIComponent(reference)}&method=${method}${paid ? '&paid=1' : ''}`);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('sending');
+    setErrorMsg('');
     try {
-      const res = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contact,
-          notes,
-          fulfillment: method,
-          address: method === 'delivery' ? address : undefined,
-          items: items.map((i) => ({
-            id: i.product.id,
-            name: i.product.name,
-            option: i.selectedOption,
-            quantity: i.quantity,
-            price: i.product.price,
-          })),
-          subtotal,
-          gst,
-          total,
-        }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        clearCart();
-        router.push(`/shop/order-success?ref=${encodeURIComponent(data.reference)}&method=${method}`);
+      if (payByCard) {
+        if (!cardRef.current) {
+          setStatus('error');
+          setErrorMsg('The card form isn’t ready yet — give it a moment, or choose pay at pickup/delivery.');
+          return;
+        }
+        const result = await cardRef.current.tokenize();
+        if (result.status !== 'OK' || !result.token) {
+          setStatus('error');
+          setErrorMsg(result.errors?.[0]?.message || 'Please check your card details and try again.');
+          return;
+        }
+        const res = await fetch('/api/square/payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sourceId: result.token, ...orderPayload() }),
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          clearCart();
+          goToSuccess(data.reference, true);
+        } else {
+          setStatus('error');
+          setErrorMsg(data.error || 'Payment failed. Please try again.');
+        }
       } else {
-        setStatus('error');
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...orderPayload(), subtotal, gst, total }),
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          clearCart();
+          goToSuccess(data.reference, false);
+        } else {
+          setStatus('error');
+          setErrorMsg(data.error || 'Something went wrong. Please try again.');
+        }
       }
     } catch {
       setStatus('error');
+      setErrorMsg('Something went wrong — please try again or call ' + COMPANY.phone.display + '.');
     }
   };
 
@@ -70,7 +115,7 @@ export default function CheckoutPage() {
         <div className="glass-card max-w-md p-10 text-center">
           <ShoppingBag size={32} className="mx-auto mb-4 text-[var(--muted)]" />
           <h1 className="mb-2 text-2xl font-bold">Your cart is empty</h1>
-          <p className="mb-6 text-sm text-[var(--muted)]">Add some supplies first — then reserve them for pickup or delivery.</p>
+          <p className="mb-6 text-sm text-[var(--muted)]">Add some supplies first — then pay online or reserve for pickup.</p>
           <Link href="/shop" className="btn-primary justify-center">Browse the Shop</Link>
         </div>
       </div>
@@ -83,9 +128,11 @@ export default function CheckoutPage() {
         <Link href="/shop" className="mb-8 inline-flex items-center gap-2 text-sm text-[var(--muted)] transition-colors hover:text-[var(--accent)]">
           <ArrowLeft size={15} /> Back to shop
         </Link>
-        <h1 className="mb-2 text-3xl font-bold">Reserve Your Order</h1>
+        <h1 className="mb-2 text-3xl font-bold">Checkout</h1>
         <p className="mb-10 text-[var(--muted)]">
-          Pick up at the yard or get it delivered — pay when you receive it. All prices in CAD.
+          {payByCard
+            ? 'Pay securely by card, or switch to pay at pickup/delivery. All prices in CAD.'
+            : 'Pick up at the yard or get it delivered — pay when you receive it. All prices in CAD.'}
         </p>
 
         <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
@@ -145,7 +192,7 @@ export default function CheckoutPage() {
                 </p>
                 <p className="flex items-start gap-2.5 text-[var(--muted)]">
                   <Clock size={15} className="mt-0.5 flex-shrink-0 text-[var(--accent)]" />
-                  Mon–Tue & Sat 12–4 · Wed–Fri 10–6 · Sun closed
+                  Mon–Tue &amp; Sat 12–4 · Wed–Fri 10–6 · Sun closed
                 </p>
               </div>
             ) : (
@@ -156,18 +203,66 @@ export default function CheckoutPage() {
                 </p>
               </div>
             )}
-            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm">
-              <p className="mb-1 font-semibold">Pay at {method === 'pickup' ? 'pickup' : 'delivery'}</p>
-              <p className="text-[var(--muted)]">{ACCEPTED_PAYMENTS.slice(0, 3).join(' · ')} · cash</p>
-            </div>
+
+            {/* Payment method */}
+            {CARD_ENABLED && (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {([
+                  { id: 'card' as const, icon: CreditCard, title: 'Pay now by card', sub: 'Secure checkout with Square' },
+                  { id: 'onsite' as const, icon: Wallet, title: `Pay at ${method === 'delivery' ? 'delivery' : 'pickup'}`, sub: 'Card, debit, e-transfer or cash' },
+                ]).map(({ id, icon: Icon, title, sub }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setPay(id)}
+                    className={`glass-card flex items-center gap-4 p-5 text-left ${pay === id ? 'border-[var(--accent)] shadow-[0_0_0_1px_var(--accent)]' : ''}`}
+                  >
+                    <span className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ${pay === id ? 'bg-[var(--accent)] text-white' : 'bg-[var(--glow-soft)] text-[var(--accent)]'}`}>
+                      <Icon size={20} />
+                    </span>
+                    <span>
+                      <span className="block font-bold">{title}</span>
+                      <span className="block text-xs text-[var(--muted)]">{sub}</span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {payByCard ? (
+              <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
+                <p className="mb-3 flex items-center gap-2 text-sm font-semibold">
+                  <CreditCard size={15} className="text-[var(--accent)]" /> Card details
+                </p>
+                <SquareCard
+                  appId={SQUARE_APP_ID!}
+                  locationId={SQUARE_LOCATION_ID!}
+                  onReady={(card) => { cardRef.current = card; }}
+                  onError={(m) => setErrorMsg(m)}
+                />
+                {method === 'delivery' && (
+                  <p className="mt-3 text-xs text-[var(--muted)]">
+                    You’re paying for the supplies now ({formatPrice(total)}). Any delivery fee is confirmed and billed separately.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm">
+                <p className="mb-1 font-semibold">Pay at {method === 'pickup' ? 'pickup' : 'delivery'}</p>
+                <p className="text-[var(--muted)]">{ACCEPTED_PAYMENTS.slice(0, 3).join(' · ')} · cash</p>
+              </div>
+            )}
 
             <button type="submit" disabled={!valid || status === 'sending'} className="btn-primary w-full justify-center disabled:cursor-not-allowed disabled:opacity-50">
               {status === 'sending'
-                ? 'Reserving…'
-                : `Reserve for ${method === 'pickup' ? 'Pickup' : 'Delivery'} — ${formatPrice(total)}`} <Check size={16} />
+                ? (payByCard ? 'Processing payment…' : 'Reserving…')
+                : payByCard
+                  ? `Pay ${formatPrice(total)}`
+                  : `Reserve for ${method === 'pickup' ? 'Pickup' : 'Delivery'} — ${formatPrice(total)}`}{' '}
+              <Check size={16} />
             </button>
             {status === 'error' && (
-              <p className="text-sm text-red-500">Something went wrong — please try again or call {COMPANY.phone.display}.</p>
+              <p className="text-sm text-red-500">{errorMsg || `Something went wrong — please try again or call ${COMPANY.phone.display}.`}</p>
             )}
             <p className="text-xs leading-relaxed text-[var(--muted)]">
               <span className="font-semibold text-[var(--text)]">Returns:</span> {RETURN_POLICY}
@@ -200,7 +295,8 @@ export default function CheckoutPage() {
                 <p className="flex justify-between"><span className="text-[var(--muted)]">Delivery fee</span><span className="text-[var(--muted)]">confirmed with order</span></p>
               )}
               <p className="flex justify-between border-t border-[var(--border)] pt-3 text-base font-bold">
-                <span>Due at {method === 'pickup' ? 'pickup' : 'delivery'}</span><span>{formatPrice(total)}{method === 'delivery' ? ' + delivery' : ''}</span>
+                <span>{payByCard ? 'Pay today' : `Due at ${method === 'pickup' ? 'pickup' : 'delivery'}`}</span>
+                <span>{formatPrice(total)}{method === 'delivery' ? ' + delivery' : ''}</span>
               </p>
             </div>
           </motion.aside>

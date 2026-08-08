@@ -11,6 +11,7 @@ function OrderSuccessContent() {
   const params = useSearchParams();
   const ref = params.get('ref');
   const isDelivery = params.get('method') === 'delivery';
+  const paid = params.get('paid') === '1';
 
   return (
     <div className="min-h-screen pt-20 flex items-center justify-center" style={{ background: 'var(--bg)' }}>
@@ -33,14 +34,18 @@ function OrderSuccessContent() {
           <CheckCircle2 size={36} className="text-[var(--accent)]" />
         </motion.div>
 
-        <h1 className="text-3xl font-bold mb-3">{isDelivery ? 'Order Received!' : 'Reserved for Pickup!'}</h1>
+        <h1 className="text-3xl font-bold mb-3">{paid ? 'Payment Received!' : isDelivery ? 'Order Received!' : 'Reserved for Pickup!'}</h1>
         {ref && (
           <p className="mb-2 text-xl font-bold tracking-widest text-[var(--accent)]">{ref}</p>
         )}
         <p className="text-[var(--muted)] text-sm mb-8">
-          {isDelivery
-            ? "We'll call to confirm your delivery window and fee — pay on delivery (credit, debit, or e-transfer)."
-            : 'Your supplies are set aside at the yard — pay when you pick up (credit, debit, or e-transfer).'}
+          {paid
+            ? isDelivery
+              ? "Thanks — your card payment went through. We'll call to confirm your delivery window (any delivery fee is billed separately). A receipt is on its way by email."
+              : "Thanks — your card payment went through. Your supplies are set aside at the yard for pickup, and a receipt is on its way by email."
+            : isDelivery
+              ? "We'll call to confirm your delivery window and fee — pay on delivery (credit, debit, or e-transfer)."
+              : 'Your supplies are set aside at the yard — pay when you pick up (credit, debit, or e-transfer).'}
         </p>
 
         <div className="
