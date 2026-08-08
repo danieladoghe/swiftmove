@@ -206,6 +206,19 @@ export async function getDashboardData(
   }
 }
 
+/** Lightweight connectivity check for the admin diagnostics panel. */
+export async function pingDatabase(): Promise<{ configured: boolean; ok: boolean; error?: string }> {
+  if (!env('DATABASE_URL')) return { configured: false, ok: false };
+  try {
+    const sql = getSql();
+    if (!sql) return { configured: false, ok: false };
+    await sql`SELECT 1`;
+    return { configured: true, ok: true };
+  } catch (err) {
+    return { configured: true, ok: false, error: (err as Error)?.message || 'connection failed' };
+  }
+}
+
 export async function updateStatus(
   id: string,
   status: SubmissionStatus

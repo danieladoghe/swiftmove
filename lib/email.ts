@@ -17,6 +17,17 @@ import { env } from './env';
 export interface SendResult {
   sent: boolean;
   error?: string;
+  /** Human-readable detail (e.g. the Resend error message) for diagnostics. */
+  detail?: string;
+}
+
+/** Non-secret view of the email configuration, for the admin diagnostics panel. */
+export function emailStatus(): { configured: boolean; from: string; to: string } {
+  return {
+    configured: !!env('RESEND_API_KEY'),
+    from: env('EMAIL_FROM') || "Mo's Yard <onboarding@resend.dev>",
+    to: env('EMAIL_TO') || 'info@mosyard.ca',
+  };
 }
 
 interface SendArgs {
@@ -53,14 +64,20 @@ export async function sendNotification({ subject, html, replyTo, to }: SendArgs)
     });
 
     if (!res.ok) {
-      const detail = await res.text().catch(() => '');
-      console.error('[email] Resend responded', res.status, detail);
-      return { sent: false, error: `resend_${res.status}` };
+      const raw = await res.text().catch(() => '');
+      let message = raw;
+      try {
+        message = JSON.parse(raw)?.message || raw;
+      } catch {
+        /* keep raw */
+      }
+      console.error('[email] Resend responded', res.status, raw);
+      return { sent: false, error: `resend_${res.status}`, detail: message || `HTTP ${res.status}` };
     }
     return { sent: true };
   } catch (err) {
     console.error('[email] send failed', err);
-    return { sent: false, error: 'exception' };
+    return { sent: false, error: 'exception', detail: err instanceof Error ? err.message : 'Network error' };
   }
 }
 

@@ -1,6 +1,12 @@
 import Link from 'next/link';
-import { getDashboardData, STATUSES, type SubmissionRow } from '@/lib/db';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { getDashboardData, pingDatabase, STATUSES, type SubmissionRow } from '@/lib/db';
 import { StatusSelect, LogoutButton } from '@/components/admin/AdminControls';
+import { Diagnostics } from '@/components/admin/Diagnostics';
+import { ADMIN_COOKIE, verifySession } from '@/lib/admin-auth';
+import { emailStatus } from '@/lib/email';
+import { env } from '@/lib/env';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,9 +58,25 @@ export default async function AdminDashboard({
 }: {
   searchParams: Promise<{ type?: string; status?: string }>;
 }) {
+  // Server-side auth guard — protects the dashboard even if the edge middleware
+  // isn't running (defense in depth on top of proxy.ts).
+  const jar = await cookies();
+  const admin = await verifySession(jar.get(ADMIN_COOKIE)?.value);
+  if (!admin) redirect('/admin/login?next=/admin');
+
   const sp = await searchParams;
   const type = sp.type || 'all';
   const status = sp.status || 'all';
+
+  const emailCfg = emailStatus();
+  const dbPing = await pingDatabase();
+  const squareCfg = {
+    configured:
+      !!env('SQUARE_ACCESS_TOKEN') &&
+      !!process.env.NEXT_PUBLIC_SQUARE_APP_ID &&
+      !!process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID,
+    env: env('SQUARE_ENV') || 'sandbox',
+  };
 
   const data = await getDashboardData({ type, status });
   const rows = data.state === 'ok' ? data.rows : [];
@@ -90,6 +112,8 @@ export default async function AdminDashboard({
           </div>
           <LogoutButton />
         </div>
+
+        <Diagnostics email={emailCfg} database={dbPing} square={squareCfg} />
 
         {data.state === 'not_configured' ? (
           <SetupNotice />

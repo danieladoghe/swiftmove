@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { STATUSES, updateStatus, type SubmissionStatus } from '@/lib/db';
+import { ADMIN_COOKIE, verifySession } from '@/lib/admin-auth';
 
-// Guarded by middleware (valid admin session required).
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  // Auth-checked here directly (defense in depth on top of proxy.ts).
+  const user = await verifySession(req.cookies.get(ADMIN_COOKIE)?.value);
+  if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+
   const { id } = await params;
   let body: { status?: string };
   try {
