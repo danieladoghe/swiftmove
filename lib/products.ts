@@ -5,7 +5,7 @@ export interface Product {
   price: number; // in cents
   category: 'boxes' | 'packing' | 'bags' | 'tape' | 'gear' | 'specialty';
   emoji: string;
-  image?: string; // /products/*.svg illustration (swap for photos anytime)
+  image?: string; // /products/*.webp product photo
   badge?: string;
   bestseller?: boolean;
   options?: string[];
@@ -20,7 +20,7 @@ export const products: Product[] = [
     price: 299,
     category: 'boxes',
     emoji: '📦',
-    image: '/products/box-s.svg',
+    image: '/products/box-s.webp',
     options: ['Pack of 5', 'Pack of 10', 'Pack of 25'],
     bestseller: true,
   },
@@ -31,7 +31,7 @@ export const products: Product[] = [
     price: 349,
     category: 'boxes',
     emoji: '📦',
-    image: '/products/box-m.svg',
+    image: '/products/box-m.webp',
     options: ['Pack of 5', 'Pack of 10', 'Pack of 25'],
     badge: 'Most Popular',
   },
@@ -42,7 +42,7 @@ export const products: Product[] = [
     price: 449,
     category: 'boxes',
     emoji: '📦',
-    image: '/products/box-l.svg',
+    image: '/products/box-l.webp',
     options: ['Pack of 5', 'Pack of 10'],
   },
   {
@@ -52,7 +52,7 @@ export const products: Product[] = [
     price: 549,
     category: 'boxes',
     emoji: '📦',
-    image: '/products/box-xl.svg',
+    image: '/products/box-xl.webp',
     options: ['Pack of 5', 'Pack of 10'],
   },
   {
@@ -62,7 +62,7 @@ export const products: Product[] = [
     price: 1899,
     category: 'boxes',
     emoji: '👔',
-    image: '/products/wardrobe.svg',
+    image: '/products/wardrobe.webp',
     badge: 'Premium',
   },
   {
@@ -72,7 +72,7 @@ export const products: Product[] = [
     price: 799,
     category: 'boxes',
     emoji: '🍽️',
-    image: '/products/dishpack.svg',
+    image: '/products/dishpack.webp',
   },
 
   // Packing Supplies
@@ -83,7 +83,7 @@ export const products: Product[] = [
     price: 1299,
     category: 'packing',
     emoji: '🫧',
-    image: '/products/bubble-wrap.svg',
+    image: '/products/bubble-wrap.webp',
     bestseller: true,
   },
   {
@@ -93,7 +93,7 @@ export const products: Product[] = [
     price: 2499,
     category: 'packing',
     emoji: '🫧',
-    image: '/products/bubble-wrap.svg',
+    image: '/products/bubble-wrap.webp',
   },
   {
     id: 'packing-paper',
@@ -102,7 +102,7 @@ export const products: Product[] = [
     price: 999,
     category: 'packing',
     emoji: '📄',
-    image: '/products/packing-paper.svg',
+    image: '/products/packing-paper.webp',
   },
   {
     id: 'foam-wrap',
@@ -111,7 +111,7 @@ export const products: Product[] = [
     price: 1499,
     category: 'packing',
     emoji: '🟪',
-    image: '/products/foam-wrap.svg',
+    image: '/products/foam-wrap.webp',
     badge: 'New',
   },
   {
@@ -121,7 +121,7 @@ export const products: Product[] = [
     price: 1899,
     category: 'packing',
     emoji: '🌀',
-    image: '/products/stretch-wrap.svg',
+    image: '/products/stretch-wrap.webp',
   },
 
   // Bags & Covers
@@ -132,7 +132,7 @@ export const products: Product[] = [
     price: 1299,
     category: 'bags',
     emoji: '🛏️',
-    image: '/products/mattress-bag.svg',
+    image: '/products/mattress-bag.webp',
   },
   {
     id: 'mattress-bag-king',
@@ -141,7 +141,7 @@ export const products: Product[] = [
     price: 1599,
     category: 'bags',
     emoji: '🛏️',
-    image: '/products/mattress-bag.svg',
+    image: '/products/mattress-bag.webp',
   },
   {
     id: 'sofa-cover',
@@ -150,7 +150,7 @@ export const products: Product[] = [
     price: 1999,
     category: 'bags',
     emoji: '🛋️',
-    image: '/products/sofa-cover.svg',
+    image: '/products/sofa-cover.webp',
     badge: 'Premium',
   },
   {
@@ -160,7 +160,7 @@ export const products: Product[] = [
     price: 2499,
     category: 'bags',
     emoji: '📺',
-    image: '/products/tv-bag.svg',
+    image: '/products/tv-bag.webp',
   },
 
   // Tape & Labels
@@ -171,7 +171,7 @@ export const products: Product[] = [
     price: 1099,
     category: 'tape',
     emoji: '🟨',
-    image: '/products/tape.svg',
+    image: '/products/tape.webp',
     bestseller: true,
   },
   {
@@ -181,7 +181,7 @@ export const products: Product[] = [
     price: 699,
     category: 'tape',
     emoji: '🏷️',
-    image: '/products/labels.svg',
+    image: '/products/labels.webp',
   },
   {
     id: 'box-cutter-2pk',
@@ -190,7 +190,7 @@ export const products: Product[] = [
     price: 799,
     category: 'tape',
     emoji: '🔪',
-    image: '/products/box-cutter.svg',
+    image: '/products/box-cutter.webp',
   },
 
   // Moving Gear
@@ -201,7 +201,7 @@ export const products: Product[] = [
     price: 4999,
     category: 'gear',
     emoji: '🧵',
-    image: '/products/blankets.svg',
+    image: '/products/blankets.webp',
     bestseller: true,
   },
   {
@@ -211,7 +211,7 @@ export const products: Product[] = [
     price: 2499,
     category: 'gear',
     emoji: '🪢',
-    image: '/products/straps.svg',
+    image: '/products/straps.webp',
   },
   {
     id: 'furniture-sliders-16pk',
@@ -220,7 +220,7 @@ export const products: Product[] = [
     price: 1299,
     category: 'gear',
     emoji: '🛝',
-    image: '/products/sliders.svg',
+    image: '/products/sliders.webp',
   },
   {
     id: 'work-gloves',
@@ -229,7 +229,7 @@ export const products: Product[] = [
     price: 999,
     category: 'gear',
     emoji: '🧤',
-    image: '/products/gloves.svg',
+    image: '/products/gloves.webp',
     options: ['M', 'L', 'XL'],
   },
   {
@@ -239,7 +239,7 @@ export const products: Product[] = [
     price: 7999,
     category: 'gear',
     emoji: '🛒',
-    image: '/products/hand-truck.svg',
+    image: '/products/hand-truck.webp',
     badge: 'Pro Grade',
   },
 
@@ -251,7 +251,7 @@ export const products: Product[] = [
     price: 4999,
     category: 'specialty',
     emoji: '🎁',
-    image: '/products/kit.svg',
+    image: '/products/kit.webp',
     badge: 'Bundle',
   },
   {
@@ -261,7 +261,7 @@ export const products: Product[] = [
     price: 12999,
     category: 'specialty',
     emoji: '🏠',
-    image: '/products/kit.svg',
+    image: '/products/kit.webp',
     badge: 'Best Value',
   },
 ];
