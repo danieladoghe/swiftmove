@@ -71,10 +71,8 @@ export default async function AdminDashboard({
   const emailCfg = emailStatus();
   const dbPing = await pingDatabase();
   const squareCfg = {
-    configured:
-      !!env('SQUARE_ACCESS_TOKEN') &&
-      !!process.env.NEXT_PUBLIC_SQUARE_APP_ID &&
-      !!process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID,
+    // Location id is auto-resolved from the token, so it's not required here.
+    configured: !!env('SQUARE_ACCESS_TOKEN') && !!process.env.NEXT_PUBLIC_SQUARE_APP_ID,
     env: env('SQUARE_ENV') || 'sandbox',
   };
 
