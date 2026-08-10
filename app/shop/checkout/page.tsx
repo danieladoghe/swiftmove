@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -17,15 +17,12 @@ type CardTokenizer = {
   tokenize: () => Promise<{ status: string; token?: string; errors?: { message: string }[] }>;
 };
 
-const SQUARE_APP_ID = process.env.NEXT_PUBLIC_SQUARE_APP_ID;
-const SQUARE_LOCATION_ID = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
-const CARD_ENABLED = !!SQUARE_APP_ID && !!SQUARE_LOCATION_ID;
-
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, subtotal, clearCart } = useCart();
   const [method, setMethod] = useState<Fulfillment>('pickup');
-  const [pay, setPay] = useState<PayMethod>(CARD_ENABLED ? 'card' : 'onsite');
+  const [pay, setPay] = useState<PayMethod>('onsite');
+  const [square, setSquare] = useState<{ appId: string; locationId: string } | null>(null);
   const [contact, setContact] = useState({ name: '', email: '', phone: '' });
   const [address, setAddress] = useState({ street: '', city: '', postal: '' });
   const [notes, setNotes] = useState('');
@@ -33,9 +30,27 @@ export default function CheckoutPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const cardRef = useRef<CardTokenizer | null>(null);
 
+  // Ask the server whether online card payment is available (and get the app +
+  // location ids). The location is auto-resolved from the token server-side, so
+  // no manual Location ID is needed.
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/square/config')
+      .then((r) => r.json())
+      .then((d) => {
+        if (alive && d?.configured && d.appId && d.locationId) {
+          setSquare({ appId: d.appId, locationId: d.locationId });
+          setPay('card');
+        }
+      })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
+
+  const cardEnabled = !!square;
   const gst = Math.round(subtotal * GST_RATE);
   const total = subtotal + gst;
-  const payByCard = CARD_ENABLED && pay === 'card';
+  const payByCard = cardEnabled && pay === 'card';
   const valid =
     contact.name.trim().length > 1 &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email) &&
@@ -205,7 +220,7 @@ export default function CheckoutPage() {
             )}
 
             {/* Payment method */}
-            {CARD_ENABLED && (
+            {cardEnabled && (
               <div className="grid gap-3 sm:grid-cols-2">
                 {([
                   { id: 'card' as const, icon: CreditCard, title: 'Pay now by card', sub: 'Secure checkout with Square' },
@@ -235,8 +250,8 @@ export default function CheckoutPage() {
                   <CreditCard size={15} className="text-[var(--accent)]" /> Card details
                 </p>
                 <SquareCard
-                  appId={SQUARE_APP_ID!}
-                  locationId={SQUARE_LOCATION_ID!}
+                  appId={square!.appId}
+                  locationId={square!.locationId}
                   onReady={(card) => { cardRef.current = card; }}
                   onError={(m) => setErrorMsg(m)}
                 />

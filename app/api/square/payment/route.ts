@@ -4,6 +4,7 @@ import { products } from '@/lib/products';
 import { GST_RATE } from '@/lib/booking';
 import { env } from '@/lib/env';
 import { persistAndNotify } from '@/lib/submissions';
+import { squareBase, SQUARE_VERSION, resolveLocationId } from '@/lib/square';
 
 interface CardOrderBody {
   sourceId: string; // Square Web Payments card token (cnon:...)
@@ -15,13 +16,6 @@ interface CardOrderBody {
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const SQUARE_VERSION = '2024-08-21';
-
-function squareBase() {
-  return (env('SQUARE_ENV') ?? 'sandbox') === 'production'
-    ? 'https://connect.squareup.com'
-    : 'https://connect.squareupsandbox.com';
-}
 
 /**
  * Charges a shop order online with Square's Payments API. The amount is always
@@ -66,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     // ── Fail closed if Square isn't configured (never fake a success) ──
     const accessToken = env('SQUARE_ACCESS_TOKEN');
-    const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID || env('SQUARE_LOCATION_ID');
+    const locationId = await resolveLocationId();
     if (!accessToken || !locationId) {
       return NextResponse.json(
         { success: false, error: 'Online card payment is not available right now. Please choose pay at pickup/delivery.' },
