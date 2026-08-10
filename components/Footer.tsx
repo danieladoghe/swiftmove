@@ -20,8 +20,8 @@ const footerLinks = {
   Company: [
     { label: 'Notes from the Yard', href: '/#notes' },
     { label: 'Contact', href: '/contact' },
-    { label: 'Privacy Policy', href: '#' },
-    { label: 'Terms of Service', href: '#' },
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms of Service', href: '/terms' },
   ],
 };
 
@@ -125,10 +125,10 @@ export function Footer() {
 
           {/* Legal links */}
           <div className="flex gap-4">
-            <Link href="#" className="text-xs text-[var(--muted)] hover:text-[var(--accent)] transition-colors">
+            <Link href="/privacy" className="text-xs text-[var(--muted)] hover:text-[var(--accent)] transition-colors">
               Privacy Policy
             </Link>
-            <Link href="#" className="text-xs text-[var(--muted)] hover:text-[var(--accent)] transition-colors">
+            <Link href="/terms" className="text-xs text-[var(--muted)] hover:text-[var(--accent)] transition-colors">
               Terms of Service
             </Link>
           </div>

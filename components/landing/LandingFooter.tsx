@@ -18,7 +18,8 @@ const company = [
   { label: 'Request a Freight Quote', href: '/freight' },
   { label: 'Book a U-Haul', href: UHAUL_URL, external: true },
   { label: 'Contact', href: '/contact' },
-  { label: 'Privacy Policy', href: '#' },
+  { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Terms of Service', href: '/terms' },
 ];
 
 export function LandingFooter() {
