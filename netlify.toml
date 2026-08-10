@@ -3,6 +3,11 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # NEXT_PUBLIC_* values are public by design (Next.js inlines them into the
+  # bundle) — the Square Application ID and site URL are meant to be visible in
+  # the browser. Tell Netlify's secrets scanner not to flag them. Real secrets
+  # (access tokens, DB URL, API keys) are NOT listed here and stay protected.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SQUARE_APP_ID,NEXT_PUBLIC_SQUARE_LOCATION_ID,NEXT_PUBLIC_SITE_URL"
 
 # Netlify auto-detects Next.js and installs the official Next.js runtime
 # (@netlify/plugin-nextjs), which handles SSR routes and the /api endpoints.
