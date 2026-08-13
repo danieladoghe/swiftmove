@@ -15,7 +15,7 @@ export function squareBase(): string {
 
 /** The public application id used by the Web Payments SDK on the client. */
 export function squareAppId(): string | undefined {
-  return process.env.NEXT_PUBLIC_SQUARE_APP_ID || env('SQUARE_APP_ID');
+  return process.env.NEXT_PUBLIC_SQUARE_APP_ID?.trim() || env('SQUARE_APP_ID');
 }
 
 let cached: { id: string; ts: number } | null = null;
