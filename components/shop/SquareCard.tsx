@@ -56,6 +56,7 @@ export function SquareCard({
   onError?: (message: string) => void;
 }) {
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [detail, setDetail] = useState('');
   const inited = useRef(false);
 
   useEffect(() => {
@@ -73,8 +74,14 @@ export function SquareCard({
         setStatus('ready');
         onReady(card);
       } catch (e) {
+        // Surface the real reason: Square's init errors ("Unauthorized",
+        // "applicationId/locationId mismatch", account-not-activated, a blocked
+        // asset, …) are diagnostic, so show them instead of a generic line.
+        const msg = e instanceof Error ? e.message : 'Could not load the card form.';
+        console.error('[SquareCard] init failed:', e);
+        setDetail(msg);
         setStatus('error');
-        onError?.(e instanceof Error ? e.message : 'Could not load the card form.');
+        onError?.(msg);
       }
     })();
     // Init once; parent callbacks are read at call time.
@@ -91,9 +98,10 @@ export function SquareCard({
         <p className="mt-2 text-sm text-[var(--muted)]">Loading secure card form…</p>
       )}
       {status === 'error' && (
-        <p className="mt-2 text-sm text-red-500">
-          Card form couldn’t load — please choose pay at pickup/delivery.
-        </p>
+        <div className="mt-2 text-sm text-red-500">
+          <p>Card form couldn’t load — please choose pay at pickup/delivery.</p>
+          {detail && <p className="mt-1 break-words text-xs opacity-80">Square: {detail}</p>}
+        </div>
       )}
     </div>
   );
