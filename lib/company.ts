@@ -9,7 +9,7 @@ export const COMPANY = {
     full: '247 Don Seaman Way, Okotoks, AB T1S 0C2',
     mapsUrl: "https://www.google.com/maps/search/?api=1&query=Mo's+Yard+247+Don+Seaman+Way+Okotoks+AB",
   },
-  phone: { display: '403-903-4107', tel: '+14039034107' },
+  phone: { display: '403-438-0475', tel: '+14034380475' },
   email: 'info@mosyard.ca',
   domain: 'https://www.mosyard.ca',
   /** Google Business Profile (maps search link until the short URL is supplied). */

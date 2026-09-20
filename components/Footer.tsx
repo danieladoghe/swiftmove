@@ -53,11 +53,11 @@ export function Footer() {
             {/* Contact info */}
             <div className="space-y-2.5">
               <a
-                href="tel:+14039034107"
+                href="tel:+14034380475"
                 className="flex items-center gap-2.5 text-sm text-[var(--muted)] hover:text-[var(--accent)] transition-colors"
               >
                 <Phone size={14} />
-                403-903-4107
+                403-438-0475
               </a>
               <a
                 href="mailto:info@mosyard.ca"

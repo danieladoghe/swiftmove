@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock, Send, Loader2, CheckCircle2 } from 'lucide-react';
 
 const contactDetails = [
-  { icon: Phone, label: 'Phone', value: '403-903-4107', href: 'tel:+14039034107' },
+  { icon: Phone, label: 'Phone', value: '403-438-0475', href: 'tel:+14034380475' },
   { icon: Mail, label: 'Email', value: 'info@mosyard.ca', href: 'mailto:info@mosyard.ca' },
   { icon: MapPin, label: 'The Yard', value: '247 Don Seaman Way\nOkotoks, AB T1S 0C2', href: "https://www.google.com/maps/search/?api=1&query=Mo's+Yard+247+Don+Seaman+Way+Okotoks+AB" },
   { icon: Clock, label: 'Hours', value: 'Mon–Tue & Sat: 12pm–4pm\nWed–Fri: 10am–6pm · Sun: Closed', href: '#' },
